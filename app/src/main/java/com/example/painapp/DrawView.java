@@ -18,28 +18,38 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 
 public class DrawView extends View {
     public Integer[] x_array;
     public Integer[] y_array;
     private int num;
     StringBuilder strb = new StringBuilder();
+    ArrayList arrayX = new ArrayList();
+    ArrayList arrayY = new ArrayList();
+
 
     private Bitmap mBitmap;
+    private Bitmap hBitmap;
     private Canvas mCanvas;
     private Path mPath;
     private Paint mBitmapPaint;
+    private Paint hBitmapPaint;
     Context context;
     private Paint circlePaint;
     private Path circlePath;
     private Paint mPaint;
     private int paintColor = Color.BLACK;
 
+    private float proportion = (float) 1.2;
+
     public DrawView(Context context) {
         super(context);
         mPath = new Path();
         mBitmapPaint = new Paint(Paint.DITHER_FLAG);
-        mBitmapPaint.setColor(Color.BLUE);
+        mBitmapPaint.setColor(Color.BLACK);
+        hBitmapPaint = new Paint(Paint.DITHER_FLAG);
+        hBitmapPaint.setColor(Color.BLACK);
         circlePaint = new Paint();
         circlePath = new Path();
         circlePaint.setAntiAlias(true);
@@ -56,18 +66,27 @@ public class DrawView extends View {
         mPaint.setStrokeCap(Paint.Cap.ROUND);
         mPaint.setStrokeWidth(1);
 
-        Bitmap b = Bitmap.createBitmap(827,900,Bitmap.Config.ARGB_8888);
+        Bitmap b = Bitmap.createBitmap( Math.round(827*proportion),Math.round(1169*proportion),Bitmap.Config.ARGB_8888);
+
         mCanvas = new Canvas(b);
 
 
         //Log.d("DrawingView", "DrawingView=========================");
     }
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        setMeasuredDimension(827,1169);
+        setMeasuredDimension(Math.round(827*proportion),Math.round(1169*proportion));
+    }
+
+    protected Bitmap getmBitmap(){
+        return this.mBitmap;
     }
 
     protected void setColor(int color){
         paintColor = color;
+    }
+
+    protected void setProportion(float proportion){
+        this.proportion = proportion;
     }
 
 
@@ -79,9 +98,8 @@ public class DrawView extends View {
 
         try {
             InputStream is = getResources().getAssets().open("original.json");
-            for (int i = 0; i < getResources().getAssets().list("").length; i++){
-                System.out.println(getResources().getAssets().list("")[i]+"\n");
-            }
+            //System.out.println("是法国进口水果还是"+getResources().getAssets());
+
             InputStreamReader isr = new InputStreamReader(is, "UTF-8");
             BufferedReader br = new BufferedReader(isr);
             String str = "";
@@ -110,11 +128,15 @@ public class DrawView extends View {
         canvas.drawColor(Color.parseColor("#00FFFFFF"));
 
 
+
         mPaint.setColor(Color.BLACK);
         mPaint.setStrokeWidth(1);
+        hBitmap = Bitmap.createBitmap(827,1169,Bitmap.Config.ARGB_8888);
         for (int i = 0; i < num; i++) {
-            canvas.drawPoint((x_array[i]), (1169 - y_array[i]),  mPaint);
+            hBitmap.setPixel((x_array[i]),(1169 - y_array[i]),Color.BLACK);
+            //canvas.drawPoint((x_array[i]), (1169 - y_array[i]),  mPaint);
         }
+        canvas.drawBitmap(zoom(hBitmap,proportion),0,0,hBitmapPaint);
         //canvas.save();
         //canvas.scale(2,2);
 
@@ -189,7 +211,7 @@ public class DrawView extends View {
             case MotionEvent.ACTION_DOWN:
                 touch_start(x, y);
                 invalidate();
-                System.out.println("start point is: x = "+x+"y = "+y);;
+                //System.out.println("start point is: x = "+x+"y = "+y);;
                 break;
             case MotionEvent.ACTION_MOVE:
                 touch_move(x, y);
@@ -199,17 +221,12 @@ public class DrawView extends View {
             case MotionEvent.ACTION_UP:
                 touch_up();
                 invalidate();
-                System.out.println("end point is: x = 是"+x+"y = "+ y);
-                for (int i = 0; i< 827;i++){
-                    for (int j = 0;j<1169;j++){
-                        if (mBitmap.getPixel(i,j)!=0){
-                            System.out.println("i="+i+"j="+j);
-                        }
+                //System.out.println("end point is: x = 是"+x+"y = "+ y);
 
-                    }
-                }
+
                 break;
         }
+
         return true;
     }
 

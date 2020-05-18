@@ -18,7 +18,8 @@ public class DrawActivity extends AppCompatActivity {
     public Integer[] y_array;
     private int num;
     StringBuilder strb = new StringBuilder();
-    private boolean saved = true;
+
+    private float proportion = (float)1.2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,8 +41,8 @@ public class DrawActivity extends AppCompatActivity {
 
         final DrawView view = new DrawView(this);
 
-        view.setMinimumHeight(1169);
-        view.setMinimumWidth(827);
+        view.setMinimumHeight(Math.round(1169*proportion));
+        view.setMinimumWidth(Math.round(827*proportion));
 
 
 
@@ -84,7 +85,7 @@ public class DrawActivity extends AppCompatActivity {
         bt6.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View v) {
-                view.setColor(Color.YELLOW);
+                view.setColor(0xFFFFC0CB);
             }
         });
         view.setOnTouchListener(new View.OnTouchListener() {
@@ -95,12 +96,17 @@ public class DrawActivity extends AppCompatActivity {
         });
         view.invalidate();
         layout.addView(view);
+
+
+
         Button bt7 = (Button) findViewById(R.id.save);
-        bt6.setOnClickListener(new Button.OnClickListener() {
+        bt7.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //导出json文件
-                saved = true;
+                SaveJson saveJson = new SaveJson();
+                saveJson.exportJson(view.getmBitmap(),proportion,"patient001");
+
             }
         });
         view.setOnTouchListener(new View.OnTouchListener() {
