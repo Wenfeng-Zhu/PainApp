@@ -114,7 +114,7 @@ public class DrawActivity extends AppCompatActivity {
                 //导出json文件
                 SaveJson saveJson = new SaveJson();
                 //System.out.println("可就是大富豪话费卡会尽快发"+view.getContext().getFilesDir().getAbsolutePath());
-                saveJson.exportJson(view.getmBitmap(),proportion,view.getContext().getFilesDir().getAbsolutePath() ,"patient001");
+                saveJson.exportJson(view.getmBitmap(),proportion,view.getContext().getFilesDir().getAbsolutePath() ,"patient002");
 
 
                 //System.out.println("埃里克东方航空拉发回来"+view.getContext().getFilesDir().getAbsolutePath());
