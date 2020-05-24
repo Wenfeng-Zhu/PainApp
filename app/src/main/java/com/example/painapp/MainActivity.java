@@ -1,7 +1,5 @@
 package com.example.painapp;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,9 +10,13 @@ import android.widget.TextView;
 
 public class MainActivity extends Activity {
     public static final int FILE_RESULT_CODE = 1;
+    public static final int RESULT_OK = 1;
     private int requestCode;
     private int resultCode;
     private Intent data;
+
+
+
 
 
     @Override
@@ -41,11 +43,19 @@ public class MainActivity extends Activity {
     }
     @Override
     protected void onActivityResult(int requestCode,int resultCode,Intent data) {
-        if (FILE_RESULT_CODE == requestCode) {
-            Bundle bundle = null;
-            if (data != null && (bundle = data.getExtras()) != null) {
-                TextView textView = (TextView) findViewById(R.id.textView);
-                textView.setText("The folder you choose is：" + bundle.getString("file"));
+        super.onActivityResult(requestCode,resultCode,data);
+        //Intent getIntent = getIntent();
+        String filePath = data.getStringExtra("filePath");
+
+        if (RESULT_OK == resultCode) {
+            System.out.println("健康良好卡的话发卡行加快分解卡号发");;
+            //Bundle bundle = null;
+            if (data != null && (data.getExtras()) != null) {
+                System.out.println("啊迪斯科解放哈尽快发回集安回复");
+
+                //String filePath = getIntent.getStringExtra("filePath");
+                TextView textView = (TextView) findViewById(R.id.filePath);
+                textView.setText("The folder you choose is：" + filePath);
             }
         }
 
