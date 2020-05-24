@@ -46,16 +46,14 @@ public class MainActivity extends Activity {
         super.onActivityResult(requestCode,resultCode,data);
         //Intent getIntent = getIntent();
         String filePath = data.getStringExtra("filePath");
-
+        Constant.filePath = filePath;
         if (RESULT_OK == resultCode) {
-            System.out.println("健康良好卡的话发卡行加快分解卡号发");;
             //Bundle bundle = null;
             if (data != null && (data.getExtras()) != null) {
-                System.out.println("啊迪斯科解放哈尽快发回集安回复");
-
                 //String filePath = getIntent.getStringExtra("filePath");
                 TextView textView = (TextView) findViewById(R.id.filePath);
-                textView.setText("The folder you choose is：" + filePath);
+                textView.setText("The folder you choose is："+"\n" + filePath);
+                Constant.ifImport = true;
             }
         }
 

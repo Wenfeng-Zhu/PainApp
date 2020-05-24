@@ -25,10 +25,12 @@ import java.util.ArrayList;
 public class DrawView extends View {
     public Integer[] x_array;
     public Integer[] y_array;
+    public Integer[] x_array_import;
+    public Integer[] y_array_import;
     private int num;
     StringBuilder strb = new StringBuilder();
-    ArrayList arrayX = new ArrayList();
-    ArrayList arrayY = new ArrayList();
+    StringBuilder strb_import = new StringBuilder();
+
 
 
     private Bitmap mBitmap;
@@ -88,6 +90,7 @@ public class DrawView extends View {
         paintColor = color;
     }
 
+
     protected void setProportion(float proportion){
         this.proportion = proportion;
     }
@@ -99,18 +102,10 @@ public class DrawView extends View {
     protected void onDraw(Canvas canvas) {
         //Bitmap bitmap = Bitmap.createBitmap(827, 1169, Bitmap.Config.ARGB_8888);
 
-
-
         try {
-
-
-
             InputStream is = getResources().getAssets().open("original.json");
-            //System.out.println(context.getFilesDir().getAbsoluteFile()+"patient_druck.json");
             //InputStream is = new FileInputStream("/data/user/0/com.example.painapp/files/patient001_druck.json");
             //InputStream is = new FileInputStream(this.context.getFilesDir().getAbsolutePath()+"/patient001_druck.json");
-            //System.out.println("是法国进口水果还是"+getResources().getAssets());
-
             InputStreamReader isr = new InputStreamReader(is, "UTF-8");
             BufferedReader br = new BufferedReader(isr);
             String str = "";
@@ -136,6 +131,9 @@ public class DrawView extends View {
         }
 
 
+
+
+
         canvas.drawColor(Color.parseColor("#00FFFFFF"));
 
 
@@ -151,6 +149,40 @@ public class DrawView extends View {
         //canvas.save();
         //canvas.scale(2,2);
 
+        if (Constant.ifImport){
+            try {
+                InputStream is_import = new FileInputStream(Constant.filePath);
+                InputStreamReader isr_import = new InputStreamReader(is_import, "UTF-8");
+                BufferedReader br_import = new BufferedReader(isr_import);
+                String str_import = "";
+                while ((str_import = br_import.readLine()) != null) {
+                    strb_import.append(str_import);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            try {
+                JSONArray jsonArray = new JSONArray(strb_import.toString());
+                num = jsonArray.length() / 2;
+                x_array_import = new Integer[num];
+                y_array_import = new Integer[num];
+                for (int i = 0; i < num; i++) {
+                    x_array_import[i] = jsonArray.getInt(i);
+                    y_array_import[i] = jsonArray.getInt(num + i);
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            for (int i = 0; i < num; i++) {
+                mBitmap.setPixel((x_array_import[i]),(1169 - y_array_import[i]),Color.BLACK);
+                //canvas.drawPoint((x_array[i]), (1169 - y_array[i]),  mPaint);
+            }
+
+
+        }
+
         super.onDraw(canvas);
 
         mPaint.setColor(paintColor);
@@ -165,9 +197,7 @@ public class DrawView extends View {
 
         canvas.drawBitmap(mBitmap, 0, 0, mBitmapPaint);
 
-
         canvas.drawPath(mPath, mPaint);
-
 
         canvas.drawPath(circlePath, circlePaint);
 

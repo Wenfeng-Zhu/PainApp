@@ -1,6 +1,7 @@
 package com.example.painapp;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Layout;
@@ -24,6 +25,8 @@ public class DrawActivity extends AppCompatActivity {
     StringBuilder strb = new StringBuilder();
 
     private float proportion = (float)1.2;
+
+    private boolean ifImport = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -107,6 +110,7 @@ public class DrawActivity extends AppCompatActivity {
             System.out.println(target);
         }
 
+
         Button bt7 = (Button) findViewById(R.id.save);
         bt7.setOnClickListener(new Button.OnClickListener() {
             @Override
@@ -123,13 +127,20 @@ public class DrawActivity extends AppCompatActivity {
 
 
         });
+        Button bt8 = (Button) findViewById(R.id.back);
+        bt8.setOnClickListener(new Button.OnClickListener(){
+            public void onClick(View v) {
+                Intent intent = new Intent(DrawActivity.this,MainActivity.class);
+                startActivity(intent);
+            }
+        });
+
         view.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 return false;
             }
         });
-
 
     }
 

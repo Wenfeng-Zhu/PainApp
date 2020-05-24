@@ -65,13 +65,6 @@ public class SaveJson {
             }
         }
         if(array_druck_X != null){
-            if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
-                //System.out.println(filePath);
-
-            } else {
-                //System.out.println("开始计划发卡行沙发哈哈奥克兰发货");
-            }
-
             createJsonFile(array_druck_X,array_druck_Y, filePath,fileName+"_druck");
         }
 
