@@ -1,5 +1,6 @@
 package com.example.painapp;
 
+import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Layout;
@@ -13,10 +14,13 @@ import android.widget.LinearLayout;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.io.File;
+
 public class DrawActivity extends AppCompatActivity {
     public Integer[] x_array;
     public Integer[] y_array;
     private int num;
+    //Context context;
     StringBuilder strb = new StringBuilder();
 
     private float proportion = (float)1.2;
@@ -97,7 +101,11 @@ public class DrawActivity extends AppCompatActivity {
         view.invalidate();
         layout.addView(view);
 
-
+        for (String i: view.getContext().fileList()){
+            System.out.println(i);
+            String target = i.substring(i.length()-9,i.length());
+            System.out.println(target);
+        }
 
         Button bt7 = (Button) findViewById(R.id.save);
         bt7.setOnClickListener(new Button.OnClickListener() {
@@ -105,9 +113,15 @@ public class DrawActivity extends AppCompatActivity {
             public void onClick(View v) {
                 //导出json文件
                 SaveJson saveJson = new SaveJson();
-                saveJson.exportJson(view.getmBitmap(),proportion,"patient001");
+                //System.out.println("可就是大富豪话费卡会尽快发"+view.getContext().getFilesDir().getAbsolutePath());
+                saveJson.exportJson(view.getmBitmap(),proportion,view.getContext().getFilesDir().getAbsolutePath() ,"patient001");
+
+
+                //System.out.println("埃里克东方航空拉发回来"+view.getContext().getFilesDir().getAbsolutePath());
 
             }
+
+
         });
         view.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -117,10 +131,6 @@ public class DrawActivity extends AppCompatActivity {
         });
 
 
-
-
-
-
-
     }
+
 }

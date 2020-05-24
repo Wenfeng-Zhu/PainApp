@@ -41,13 +41,13 @@ public class FileSelect extends AppCompatActivity {
         //获取列出全部文件发ListView
         listview = (ListView) findViewById(R.id.list);
         textView = (TextView) findViewById(R.id.mPath);
-        //获取系统的SD卡目录
-        File root = new File("/mnt");
-        //如果SD卡存在
+        //获取软件文件目录
+        File root = new File("/data/user/0/com.example.painapp/files");
+        //如果路径存在
         if (root.exists()) {
             currentParent = root;
             currentFiles = root.listFiles();//获取root目录下的所有文件
-            //使用当前陆慕下的全部文件，文件夹来填充ListView
+            //使用当前目录下的全部文件，文件夹来填充ListView
             inflateListView(currentFiles);
         }//if
         //为ListView的列表项的单击事件绑定监视器
@@ -87,7 +87,7 @@ public class FileSelect extends AppCompatActivity {
     //返回上层菜单
     private void onbey() {
         try {
-            if (!"/mnt".equals(currentParent.getCanonicalPath())) {
+            if (!"/data/user/0/com.example.painapp/files".equals(currentParent.getCanonicalPath())) {
                 //获取上一层目录
                 currentParent = currentParent.getParentFile();
                 //列出当前目录下的所有文件
@@ -122,7 +122,7 @@ public class FileSelect extends AppCompatActivity {
     //更新列表
     private void inflateListView(File[] files) {
         if (files.length == 0)
-            Toast.makeText(FileSelect.this, "sd卡不存在", Toast.LENGTH_SHORT).show();
+            Toast.makeText(FileSelect.this, "Path does not exist", Toast.LENGTH_SHORT).show();
         else {
             //创建一个List集合,List集合的元素是Map
             List<Map<String, Object>> listItems = new ArrayList<Map<String, Object>>();
@@ -142,7 +142,7 @@ public class FileSelect extends AppCompatActivity {
             //位ListView设置Adpter
             listview.setAdapter(simpleAdapter);
             try {
-                textView.setText("当前路径为：" + currentParent.getCanonicalPath());
+                textView.setText("The current path is：" + currentParent.getCanonicalPath());
             } catch (IOException e) {
                 e.printStackTrace();
             }//catch

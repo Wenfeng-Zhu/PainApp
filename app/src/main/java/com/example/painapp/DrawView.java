@@ -15,6 +15,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -45,6 +47,7 @@ public class DrawView extends View {
 
     public DrawView(Context context) {
         super(context);
+        this.context = context;
         mPath = new Path();
         mBitmapPaint = new Paint(Paint.DITHER_FLAG);
         mBitmapPaint.setColor(Color.BLACK);
@@ -91,13 +94,21 @@ public class DrawView extends View {
 
 
 
+
+
     protected void onDraw(Canvas canvas) {
         //Bitmap bitmap = Bitmap.createBitmap(827, 1169, Bitmap.Config.ARGB_8888);
 
 
 
         try {
+
+
+
             InputStream is = getResources().getAssets().open("original.json");
+            //System.out.println(context.getFilesDir().getAbsoluteFile()+"patient_druck.json");
+            //InputStream is = new FileInputStream("/data/user/0/com.example.painapp/files/patient001_druck.json");
+            //InputStream is = new FileInputStream(this.context.getFilesDir().getAbsolutePath()+"/patient001_druck.json");
             //System.out.println("是法国进口水果还是"+getResources().getAssets());
 
             InputStreamReader isr = new InputStreamReader(is, "UTF-8");
@@ -144,6 +155,13 @@ public class DrawView extends View {
 
         mPaint.setColor(paintColor);
         mPaint.setStrokeWidth(10);
+
+
+
+        //for (int i = 0; i < num; i++) {
+        //    mBitmap.setPixel((x_array[i]),(1169 - y_array[i]),Color.BLACK);
+        //    //canvas.drawPoint((x_array[i]), (1169 - y_array[i]),  mPaint);
+        //}
 
         canvas.drawBitmap(mBitmap, 0, 0, mBitmapPaint);
 

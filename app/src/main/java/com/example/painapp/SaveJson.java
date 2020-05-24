@@ -1,15 +1,20 @@
 package com.example.painapp;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.os.Environment;
+import android.util.Log;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
+import java.nio.file.Files;
 import java.util.ArrayList;
 
 public class SaveJson {
+    private static Context context;
     private Bitmap mBitmap;
     ArrayList array_druck_X = new ArrayList();
     ArrayList array_druck_Y = new ArrayList();
@@ -26,41 +31,48 @@ public class SaveJson {
 
     public SaveJson(){
     }
-    public void exportJson(Bitmap bitmap,float proportion,String fileName){
+    public void exportJson(Bitmap bitmap,float proportion,String filePath,String fileName){
         mBitmap = bitmap;
         for (int i = 0; i< Math.round(827*proportion);i++){
             for (int j = 0;j<Math.round(1169*proportion);j++){
                 if (mBitmap.getPixel(i,j)!=0){
                     if (mBitmap.getPixel(i,j) == Color.BLACK){
                         array_druck_X.add(Math.round(i/proportion));
-                        array_druck_Y.add(Math.round(j/proportion));
+                        array_druck_Y.add(1169-Math.round(j/proportion));
                     }
                     else if (mBitmap.getPixel(i,j) == Color.RED){
                         array_stechend_X.add(Math.round(i/proportion));
-                        array_stechend_Y.add(Math.round(j/proportion));
+                        array_stechend_Y.add(1169-Math.round(j/proportion));
                     }
                     else if (mBitmap.getPixel(i,j) == Color.GREEN){
                         array_bohrend_X.add(Math.round(i/proportion));
-                        array_bohrend_Y.add(Math.round(j/proportion));
+                        array_bohrend_Y.add(1169-Math.round(j/proportion));
                     }
                     else if (mBitmap.getPixel(i,j) == Color.BLUE){
                         array_dumpf_X.add(Math.round(i/proportion));
-                        array_dumpf_Y.add(Math.round(j/proportion));
+                        array_dumpf_Y.add(1169-Math.round(j/proportion));
                     }
                     else if (mBitmap.getPixel(i,j) == Color.GRAY){
                         array_kolik_X.add(Math.round(i/proportion));
-                        array_kolik_Y.add(Math.round(j/proportion));
+                        array_kolik_Y.add(1169-Math.round(j/proportion));
                     }
                     else if (mBitmap.getPixel(i,j) == 0xFFFFC0CB){
                         array_brennen_X.add(Math.round(i/proportion));
-                        array_brennen_Y.add(Math.round(j/proportion));
+                        array_brennen_Y.add(1169-Math.round(j/proportion));
                     }
 
                 }
             }
         }
         if(array_druck_X != null){
-            createJsonFile(array_druck_X,array_druck_Y,"src/main/res",fileName+"_druck");
+            if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+                //System.out.println(filePath);
+
+            } else {
+                //System.out.println("开始计划发卡行沙发哈哈奥克兰发货");
+            }
+
+            createJsonFile(array_druck_X,array_druck_Y, filePath,fileName+"_druck");
         }
 
 
@@ -74,7 +86,7 @@ public class SaveJson {
         String jsonString;
 
         // 拼接文件完整路径
-        String fullPath = filePath + File.separator + fileName + ".json";
+        String fullPath =  filePath + File.separator + fileName + ".json";
 
         // 生成json格式文件
         try {

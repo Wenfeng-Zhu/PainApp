@@ -70,12 +70,12 @@ public class MyAdapter extends BaseAdapter {
         File file =new File(paths.get(position).toString());
         if(items.get(position).toString().equals("b1"))
         {
-            holder.text.setText("返回根目录..");
+            holder.text.setText("Return to root");
             holder.icon.setImageBitmap(mIcon1);
         }
         else if(items.get(position).toString().equals("b2"))
         {
-            holder.text.setText("返回上一层..");
+            holder.text.setText("Return to parent directory");
             holder.icon.setImageBitmap(mIcon2);
         }
         else
