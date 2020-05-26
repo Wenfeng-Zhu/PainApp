@@ -25,6 +25,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:background="@drawable/button_druck"
                 android:text="Druck" />
 
             <Button
@@ -32,6 +33,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:background="@drawable/button_stechend"
                 android:text="Stechend" />
 
             <Button
@@ -39,6 +41,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:background="@drawable/button_bohrend"
                 android:text="Bohrend" />
 
         </LinearLayout>
@@ -53,6 +56,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:background="@drawable/button_dumpf"
                 android:text="Dumpf" />
 
             <Button
@@ -60,6 +64,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:background="@drawable/button_kolik"
                 android:text="Kolik" />
 
             <Button
@@ -67,8 +72,16 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:background="@drawable/button_brennen"
                 android:text="Brennen" />
+
         </LinearLayout>
+
+        <Button
+            android:id="@+id/button_eraser"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Eraser" />
 
         <LinearLayout
             android:id="@+id/root"
@@ -76,6 +89,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:layout_gravity="center_horizontal"  >
+
         </LinearLayout>
 
         <LinearLayout

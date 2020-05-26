@@ -64,9 +64,25 @@ public class SaveJson {
                 }
             }
         }
-        if(array_druck_X != null){
+        if(array_druck_X.size() != 0 ){
             createJsonFile(array_druck_X,array_druck_Y, filePath,fileName+"_druck");
         }
+        if (array_stechend_X.size() != 0){
+            createJsonFile(array_stechend_X,array_stechend_Y, filePath,fileName+"_stechend");
+        }
+        if (array_bohrend_X.size() != 0){
+            createJsonFile(array_bohrend_X,array_bohrend_Y, filePath,fileName+"_bohrend");
+        }
+        if (array_dumpf_X .size() != 0){
+            createJsonFile(array_dumpf_X,array_dumpf_Y, filePath,fileName+"_dumpf");
+        }
+        if (array_kolik_X.size() != 0){
+            createJsonFile(array_kolik_X,array_kolik_Y, filePath,fileName+"_kolik");
+        }
+        if (array_brennen_X.size() != 0){
+            createJsonFile(array_brennen_X,array_brennen_Y, filePath,fileName+"_brennen");
+        }
+
 
 
 

@@ -1,5 +1,6 @@
 package com.example.painapp;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -8,8 +9,10 @@ import android.text.Layout;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import androidx.appcompat.app.AlertDialog;
@@ -18,34 +21,30 @@ import androidx.appcompat.app.AppCompatActivity;
 import java.io.File;
 
 public class DrawActivity extends AppCompatActivity {
-    public Integer[] x_array;
-    public Integer[] y_array;
-    private int num;
-    //Context context;
-    StringBuilder strb = new StringBuilder();
+
 
     private float proportion = (float)1.2;
+    private int Pen = 1;
+    private int Eraser = 2;
 
-    private boolean ifImport = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_draw);
-        //System.out.println("测试1");
+        DialogUtils dialogUtils = new DialogUtils();
+
         init();
+        dialogUtils.showCompleteDialog(this,"You need to know before painting");
+
+
+
 
     }
-
     private void init() {
 
-
-        //System.out.println("测试2");
         LinearLayout layout = (LinearLayout) findViewById(R.id.root);
-        //System.out.println("测试3");
-        //PaintDraw paintDraw = new PaintDraw(this);
-
-
         final DrawView view = new DrawView(this);
 
         view.setMinimumHeight(Math.round(1169*proportion));
@@ -58,6 +57,7 @@ public class DrawActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 view.setColor(Color.BLACK);
+                view.setMode(Pen);
             }
         });
         Button bt2 = (Button) findViewById(R.id.Stechend);
@@ -65,6 +65,7 @@ public class DrawActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 view.setColor(Color.RED);
+                view.setMode(Pen);
             }
         });
         Button bt3 = (Button) findViewById(R.id.Bohrend);
@@ -72,6 +73,7 @@ public class DrawActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 view.setColor(Color.GREEN);
+                view.setMode(Pen);
             }
         });
         Button bt4 = (Button) findViewById(R.id.Dumpf);
@@ -79,6 +81,7 @@ public class DrawActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 view.setColor(Color.BLUE);
+                view.setMode(Pen);
             }
         });
         Button bt5 = (Button) findViewById(R.id.Kolik);
@@ -86,6 +89,7 @@ public class DrawActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 view.setColor(Color.GRAY);
+                view.setMode(Pen);
             }
         });
         Button bt6 = (Button) findViewById(R.id.Brennen);
@@ -93,8 +97,19 @@ public class DrawActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 view.setColor(0xFFFFC0CB);
+                view.setMode(Pen);
             }
         });
+        Button bt7 = (Button) findViewById(R.id.button_eraser);
+        bt7.setOnClickListener(new Button.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                view.setMode(Eraser);
+            }
+        });
+
+
+
         view.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -111,27 +126,24 @@ public class DrawActivity extends AppCompatActivity {
         }
 
 
-        Button bt7 = (Button) findViewById(R.id.save);
-        bt7.setOnClickListener(new Button.OnClickListener() {
+        Button bt8 = (Button) findViewById(R.id.save);
+        bt8.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //导出json文件
                 SaveJson saveJson = new SaveJson();
-                //System.out.println("可就是大富豪话费卡会尽快发"+view.getContext().getFilesDir().getAbsolutePath());
                 saveJson.exportJson(view.getmBitmap(),proportion,view.getContext().getFilesDir().getAbsolutePath() ,"patient002");
 
-
-                //System.out.println("埃里克东方航空拉发回来"+view.getContext().getFilesDir().getAbsolutePath());
 
             }
 
 
         });
-        Button bt8 = (Button) findViewById(R.id.back);
-        bt8.setOnClickListener(new Button.OnClickListener(){
+        Button bt9 = (Button) findViewById(R.id.back);
+        bt9.setOnClickListener(new Button.OnClickListener(){
             public void onClick(View v) {
                 Intent intent = new Intent(DrawActivity.this,MainActivity.class);
                 startActivity(intent);
+                Constant.ifImport = false;
             }
         });
 
@@ -141,6 +153,8 @@ public class DrawActivity extends AppCompatActivity {
                 return false;
             }
         });
+
+
 
     }
 

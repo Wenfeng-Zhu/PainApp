@@ -2,6 +2,7 @@ package com.example.painapp;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -11,13 +12,6 @@ import android.widget.TextView;
 public class MainActivity extends Activity {
     public static final int FILE_RESULT_CODE = 1;
     public static final int RESULT_OK = 1;
-    private int requestCode;
-    private int resultCode;
-    private Intent data;
-
-
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,6 +22,7 @@ public class MainActivity extends Activity {
         bt1.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 Intent intent = new Intent(MainActivity.this, DrawActivity.class);
                 startActivity(intent);
             }
@@ -53,6 +48,29 @@ public class MainActivity extends Activity {
                 //String filePath = getIntent.getStringExtra("filePath");
                 TextView textView = (TextView) findViewById(R.id.filePath);
                 textView.setText("The folder you choose is："+"\n" + filePath);
+                String str = filePath;
+                String substr = str.substring(filePath.length()-9);
+                switch (substr){
+                    case "ruck.json":
+                        Constant.color = Color.BLACK;
+                        break;
+                    case "hend.json":
+                        Constant.color = Color.RED;
+                        break;
+                    case "rend.json":
+                        Constant.color = Color.GREEN;
+                        break;
+                    case "umpf.json":
+                        Constant.color = Color.BLUE;
+                        break;
+                    case "olik.json":
+                        Constant.color = Color.GRAY;
+                        break;
+                    case "nnen.json":
+                        Constant.color = 0xFFFFC0CB;
+                        break;
+                }
+
                 Constant.ifImport = true;
             }
         }

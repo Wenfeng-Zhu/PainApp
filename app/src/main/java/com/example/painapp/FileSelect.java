@@ -91,11 +91,9 @@ public class FileSelect extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(FileSelect.this,MainActivity.class);
                 startActivity(intent);
-
-                //onbey();
             }//onClick
         });
-    }//onCraete
+    }
 
     //返回上层菜单
 //    private void onbey() {
@@ -154,7 +152,7 @@ public class FileSelect extends AppCompatActivity {
             //位ListView设置Adpter
             listview.setAdapter(simpleAdapter);
             try {
-                textView.setText("The current path is：" + currentParent.getCanonicalPath());
+                textView.setText("The current path is："+"\n" + currentParent.getCanonicalPath());
             } catch (IOException e) {
                 e.printStackTrace();
             }//catch

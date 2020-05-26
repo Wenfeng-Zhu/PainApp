@@ -7,6 +7,8 @@ import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Path;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffXfermode;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -35,15 +37,18 @@ public class DrawView extends View {
 
     private Bitmap mBitmap;
     private Bitmap hBitmap;
+    private Bitmap cBitmap;
     private Canvas mCanvas;
     private Path mPath;
     private Paint mBitmapPaint;
     private Paint hBitmapPaint;
+    private Paint mEraserPaint;
     Context context;
     private Paint circlePaint;
     private Path circlePath;
     private Paint mPaint;
     private int paintColor = Color.BLACK;
+    private int mMode = 1;
 
     private float proportion = (float) 1.2;
 
@@ -53,6 +58,16 @@ public class DrawView extends View {
         mPath = new Path();
         mBitmapPaint = new Paint(Paint.DITHER_FLAG);
         mBitmapPaint.setColor(Color.BLACK);
+
+        mEraserPaint = new Paint((Paint.DITHER_FLAG));
+        mEraserPaint.setAlpha(0);
+        mEraserPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.DST_IN));
+        mEraserPaint.setAntiAlias(true);
+        mEraserPaint.setDither(true);
+        mEraserPaint.setStyle(Paint.Style.STROKE);
+        mEraserPaint.setStrokeJoin(Paint.Join.ROUND);
+        mEraserPaint.setStrokeWidth(20);
+
         hBitmapPaint = new Paint(Paint.DITHER_FLAG);
         hBitmapPaint.setColor(Color.BLACK);
         circlePaint = new Paint();
@@ -90,13 +105,9 @@ public class DrawView extends View {
         paintColor = color;
     }
 
-
-    protected void setProportion(float proportion){
-        this.proportion = proportion;
+    protected void setMode(int mode){
+        this.mMode = mode;
     }
-
-
-
 
 
     protected void onDraw(Canvas canvas) {
@@ -130,24 +141,15 @@ public class DrawView extends View {
             e.printStackTrace();
         }
 
-
-
-
-
         canvas.drawColor(Color.parseColor("#00FFFFFF"));
-
-
 
         mPaint.setColor(Color.BLACK);
         mPaint.setStrokeWidth(1);
         hBitmap = Bitmap.createBitmap(827,1169,Bitmap.Config.ARGB_8888);
         for (int i = 0; i < num; i++) {
             hBitmap.setPixel((x_array[i]),(1169 - y_array[i]),Color.BLACK);
-            //canvas.drawPoint((x_array[i]), (1169 - y_array[i]),  mPaint);
         }
         canvas.drawBitmap(zoom(hBitmap,proportion),0,0,hBitmapPaint);
-        //canvas.save();
-        //canvas.scale(2,2);
 
         if (Constant.ifImport){
             try {
@@ -174,13 +176,12 @@ public class DrawView extends View {
             } catch (JSONException e) {
                 e.printStackTrace();
             }
+            cBitmap = Bitmap.createBitmap( Math.round(827*proportion),Math.round(1169*proportion),Bitmap.Config.ARGB_8888);
 
             for (int i = 0; i < num; i++) {
-                mBitmap.setPixel((x_array_import[i]),(1169 - y_array_import[i]),Color.BLACK);
-                //canvas.drawPoint((x_array[i]), (1169 - y_array[i]),  mPaint);
+                cBitmap.setPixel(x_array_import[i],1169 - y_array_import[i],Constant.color);
             }
-
-
+            mCanvas.drawBitmap(zoom(cBitmap,proportion),0,0,mBitmapPaint);;
         }
 
         super.onDraw(canvas);
@@ -190,20 +191,18 @@ public class DrawView extends View {
 
 
 
-        //for (int i = 0; i < num; i++) {
-        //    mBitmap.setPixel((x_array[i]),(1169 - y_array[i]),Color.BLACK);
-        //    //canvas.drawPoint((x_array[i]), (1169 - y_array[i]),  mPaint);
-        //}
-
         canvas.drawBitmap(mBitmap, 0, 0, mBitmapPaint);
+        switch (mMode){
+            case 1:
+                canvas.drawPath(mPath, mPaint);
+                canvas.drawPath(circlePath, circlePaint);
+                break;
+            case 2:
+                mCanvas.drawPath(mPath, mEraserPaint);
+                canvas.drawPath(circlePath, circlePaint);
+                break;
+        }
 
-        canvas.drawPath(mPath, mPaint);
-
-        canvas.drawPath(circlePath, circlePaint);
-
-
-
-        //Log.d("onDraw", "onDraw================================");
     }
 
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
@@ -211,8 +210,6 @@ public class DrawView extends View {
 
         mBitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
         mCanvas = new Canvas(mBitmap);
-
-        //Log.d("OnSizeChanged", "OnSizeChanged=========================");
 
     }
     private float mX, mY;
@@ -223,6 +220,14 @@ public class DrawView extends View {
         mPath.moveTo(x, y);
         mX = x;
         mY = y;
+        switch (mMode){
+            case 1:
+                mCanvas.drawPath(mPath, mPaint);
+                break;
+            case 2:
+                mCanvas.drawPath(mPath, mEraserPaint);
+                break;
+        }
     }
 
     private void touch_move(float x, float y) {
@@ -233,6 +238,15 @@ public class DrawView extends View {
             //mPath.quadTo(mX, mY, x, y);
             mX = x;
             mY = y;
+
+            switch (mMode){
+                case 1:
+                    mCanvas.drawPath(mPath, mPaint);
+                    break;
+                case 2:
+                    mCanvas.drawPath(mPath, mEraserPaint);
+                    break;
+            }
 
             circlePath.reset();
             circlePath.addCircle(mX, mY, 30, Path.Direction.CW);
@@ -245,8 +259,15 @@ public class DrawView extends View {
         mPath.lineTo(mX, mY);
         circlePath.reset();
         // commit the path to our offscreen
-        mCanvas.drawPath(mPath, mPaint);
-        // kill this so we don't double draw
+        switch (mMode){
+            case 1:
+                mCanvas.drawPath(mPath, mPaint);
+                break;
+            case 2:
+                mCanvas.drawPath(mPath, mEraserPaint);
+                break;
+        }
+
         mPath.reset();
     }
 
@@ -259,25 +280,18 @@ public class DrawView extends View {
             case MotionEvent.ACTION_DOWN:
                 touch_start(x, y);
                 invalidate();
-                //System.out.println("start point is: x = "+x+"y = "+y);;
                 break;
             case MotionEvent.ACTION_MOVE:
                 touch_move(x, y);
                 invalidate();
-                //System.out.println("中间坐标"+x+"y="+y);
                 break;
             case MotionEvent.ACTION_UP:
                 touch_up();
                 invalidate();
-                //System.out.println("end point is: x = 是"+x+"y = "+ y);
-
-
                 break;
         }
-
         return true;
     }
-
     private static Bitmap zoom(Bitmap bitmap,float proportion) {
         Matrix matrix = new Matrix();
         matrix.postScale(proportion,proportion); //长和宽放大缩小的比例
