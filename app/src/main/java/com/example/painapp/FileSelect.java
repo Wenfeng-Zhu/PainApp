@@ -42,8 +42,8 @@ public class FileSelect extends AppCompatActivity {
         //获取列出全部文件发ListView
         listview = (ListView) findViewById(R.id.list);
         textView = (TextView) findViewById(R.id.mPath);
-        //获取软件文件目录
-        File root = new File("/data/user/0/com.example.painapp/files");
+        //获取软件文件目录"/data/user/0/com.example.painapp/files"
+        File root = new File(this.getFilesDir().getAbsolutePath());
         //如果路径存在
         if (root.exists()) {
             currentParent = root;
@@ -55,17 +55,16 @@ public class FileSelect extends AppCompatActivity {
         listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                //用户点击了文件，则调用手机已安装软件操作该文件
                 if (currentFiles[position].isFile()) {
                     //Intent intent = OpenFile.openFile(currentFiles[position].getPath());
-                    Intent intent = new Intent(FileSelect.this,MainActivity.class);
+                    Intent intent = new Intent(FileSelect.this, MainActivity.class);
                     String filePath = currentFiles[position].getPath();
                     //Bundle bundle = new Bundle();
 
                     //bundle.putString("filePath",filePath);
-                    intent.putExtra("filePath",filePath);
+                    intent.putExtra("filePath", filePath);
 
-                    setResult(RESULT_OK,intent);
+                    setResult(RESULT_OK, intent);
                     finish();
                     //startActivity(intent);
                 } else {
@@ -84,12 +83,11 @@ public class FileSelect extends AppCompatActivity {
                 }//else
             }//onItemClick
         });
-        Button cancel  = (Button) findViewById(R.id.buttonCancel);
+        Button cancel = (Button) findViewById(R.id.buttonCancel);
         cancel.setOnClickListener(new View.OnClickListener() {
-
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(FileSelect.this,MainActivity.class);
+                Intent intent = new Intent(FileSelect.this, MainActivity.class);
                 startActivity(intent);
             }//onClick
         });
@@ -133,35 +131,35 @@ public class FileSelect extends AppCompatActivity {
     //更新列表
     private void inflateListView(File[] files) {
         if (files.length == 0)
-            Toast.makeText(FileSelect.this, "Path does not exist", Toast.LENGTH_SHORT).show();
+            Toast.makeText(FileSelect.this, "Folder is empty", Toast.LENGTH_SHORT).show();
         else {
             //创建一个List集合,List集合的元素是Map
             List<Map<String, Object>> listItems = new ArrayList<Map<String, Object>>();
             for (int i = 0; i < files.length; i++) {
                 Map<String, Object> listItem = new HashMap<String, Object>();
                 //如果当前File是文件夹，使用folder图标；否则使用file图标
-                if (files[i].isDirectory()) listItem.put("icon", R.drawable.icons_black);//文件夹
+                if (files[i].isDirectory()) listItem.put("icon", R.drawable.icons_folder);//文件夹
                     //else if(files[i].isFi)
-                else listItem.put("icon", R.drawable.icons_white);//文件
+                else listItem.put("icon", R.drawable.icons_file);//文件
                 listItem.put("fileName", files[i].getName());
                 //添加List项
                 listItems.add(listItem);
             }//for
             //创建一个SimpleAdapter
-            SimpleAdapter simpleAdapter = new SimpleAdapter(this, listItems, R.layout.activity_file_row, new String[]{"icon", "fileName"},  new int[]{R.id.icon, R.id.filename});
+            SimpleAdapter simpleAdapter = new SimpleAdapter(this, listItems, R.layout.activity_file_row, new String[]{"icon", "fileName"}, new int[]{R.id.icon, R.id.filename});
             //位ListView设置Adpter
             listview.setAdapter(simpleAdapter);
             try {
-                textView.setText("The current path is："+"\n" + currentParent.getCanonicalPath());
+                textView.setText("The current path is:" + "\n" + currentParent.getCanonicalPath());
             } catch (IOException e) {
                 e.printStackTrace();
-            }//catch
-        }//esle
-    }//inflateListView
+            }
+        }
+    }
 
     //监听手机自带返回键
     public void onBackPressed() {
-        Intent intent = new Intent(FileSelect.this,MainActivity.class);
+        Intent intent = new Intent(FileSelect.this, MainActivity.class);
         startActivity(intent);
 
     }

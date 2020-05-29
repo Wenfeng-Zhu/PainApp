@@ -18,39 +18,43 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        //Button pointing to Draw Page
         Button bt1 = (Button) findViewById(R.id.goToDraw);
         bt1.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 Intent intent = new Intent(MainActivity.this, DrawActivity.class);
                 startActivity(intent);
             }
         });
+        //Button pointing to File Page
         Button bt2 = (Button) findViewById(R.id.goToSelect);
         bt2.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, FileSelect.class);
-                startActivityForResult(intent,FILE_RESULT_CODE);
+                //When the new interface is closed, the data is returned.
+                startActivityForResult(intent, FILE_RESULT_CODE);
             }
         });
     }
+
     @Override
-    protected void onActivityResult(int requestCode,int resultCode,Intent data) {
-        super.onActivityResult(requestCode,resultCode,data);
-        //Intent getIntent = getIntent();
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        //Get data from the new interface
         String filePath = data.getStringExtra("filePath");
         Constant.filePath = filePath;
         if (RESULT_OK == resultCode) {
             //Bundle bundle = null;
             if (data != null && (data.getExtras()) != null) {
-                //String filePath = getIntent.getStringExtra("filePath");
                 TextView textView = (TextView) findViewById(R.id.filePath);
-                textView.setText("The folder you choose is："+"\n" + filePath);
+                //Show file path in Text View
+                textView.setText("The folder you choose is：" + "\n" + filePath);
+                //Determine the corresponding color according to the second half of the path string
                 String str = filePath;
-                String substr = str.substring(filePath.length()-9);
-                switch (substr){
+                String substr = str.substring(filePath.length() - 9);
+                switch (substr) {
                     case "ruck.json":
                         Constant.color = Color.BLACK;
                         break;
@@ -70,11 +74,9 @@ public class MainActivity extends Activity {
                         Constant.color = 0xFFFFC0CB;
                         break;
                 }
-
                 Constant.ifImport = true;
             }
         }
-
     }
 
 

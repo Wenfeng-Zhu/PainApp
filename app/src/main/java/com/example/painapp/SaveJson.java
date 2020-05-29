@@ -29,73 +29,66 @@ public class SaveJson {
     ArrayList array_brennen_X = new ArrayList();
     ArrayList array_brennen_Y = new ArrayList();
 
-    public SaveJson(){
+    public SaveJson() {
     }
-    public void exportJson(Bitmap bitmap,float proportion,String filePath,String fileName){
+
+    public void exportJson(Bitmap bitmap, float proportion, String filePath, String fileName) {
         mBitmap = bitmap;
-        for (int i = 0; i< Math.round(827*proportion);i++){
-            for (int j = 0;j<Math.round(1169*proportion);j++){
-                if (mBitmap.getPixel(i,j)!=0){
-                    if (mBitmap.getPixel(i,j) == Color.BLACK){
-                        array_druck_X.add(Math.round(i/proportion));
-                        array_druck_Y.add(1169-Math.round(j/proportion));
-                    }
-                    else if (mBitmap.getPixel(i,j) == Color.RED){
-                        array_stechend_X.add(Math.round(i/proportion));
-                        array_stechend_Y.add(1169-Math.round(j/proportion));
-                    }
-                    else if (mBitmap.getPixel(i,j) == Color.GREEN){
-                        array_bohrend_X.add(Math.round(i/proportion));
-                        array_bohrend_Y.add(1169-Math.round(j/proportion));
-                    }
-                    else if (mBitmap.getPixel(i,j) == Color.BLUE){
-                        array_dumpf_X.add(Math.round(i/proportion));
-                        array_dumpf_Y.add(1169-Math.round(j/proportion));
-                    }
-                    else if (mBitmap.getPixel(i,j) == Color.GRAY){
-                        array_kolik_X.add(Math.round(i/proportion));
-                        array_kolik_Y.add(1169-Math.round(j/proportion));
-                    }
-                    else if (mBitmap.getPixel(i,j) == 0xFFFFC0CB){
-                        array_brennen_X.add(Math.round(i/proportion));
-                        array_brennen_Y.add(1169-Math.round(j/proportion));
+        for (int i = 0; i < Math.round(827 * proportion); i++) {
+            for (int j = 0; j < Math.round(1169 * proportion); j++) {
+                if (mBitmap.getPixel(i, j) != 0) {
+                    if (mBitmap.getPixel(i, j) == Color.BLACK) {
+                        array_druck_X.add(Math.round(i / proportion));
+                        array_druck_Y.add(1169 - Math.round(j / proportion));
+                    } else if (mBitmap.getPixel(i, j) == Color.RED) {
+                        array_stechend_X.add(Math.round(i / proportion));
+                        array_stechend_Y.add(1169 - Math.round(j / proportion));
+                    } else if (mBitmap.getPixel(i, j) == Color.GREEN) {
+                        array_bohrend_X.add(Math.round(i / proportion));
+                        array_bohrend_Y.add(1169 - Math.round(j / proportion));
+                    } else if (mBitmap.getPixel(i, j) == Color.BLUE) {
+                        array_dumpf_X.add(Math.round(i / proportion));
+                        array_dumpf_Y.add(1169 - Math.round(j / proportion));
+                    } else if (mBitmap.getPixel(i, j) == Color.GRAY) {
+                        array_kolik_X.add(Math.round(i / proportion));
+                        array_kolik_Y.add(1169 - Math.round(j / proportion));
+                    } else if (mBitmap.getPixel(i, j) == 0xFFFFC0CB) {
+                        array_brennen_X.add(Math.round(i / proportion));
+                        array_brennen_Y.add(1169 - Math.round(j / proportion));
                     }
 
                 }
             }
         }
-        if(array_druck_X.size() != 0 ){
-            createJsonFile(array_druck_X,array_druck_Y, filePath,fileName+"_druck");
+        if (array_druck_X.size() != 0) {
+            createJsonFile(array_druck_X, array_druck_Y, filePath, fileName + "_druck");
         }
-        if (array_stechend_X.size() != 0){
-            createJsonFile(array_stechend_X,array_stechend_Y, filePath,fileName+"_stechend");
+        if (array_stechend_X.size() != 0) {
+            createJsonFile(array_stechend_X, array_stechend_Y, filePath, fileName + "_stechend");
         }
-        if (array_bohrend_X.size() != 0){
-            createJsonFile(array_bohrend_X,array_bohrend_Y, filePath,fileName+"_bohrend");
+        if (array_bohrend_X.size() != 0) {
+            createJsonFile(array_bohrend_X, array_bohrend_Y, filePath, fileName + "_bohrend");
         }
-        if (array_dumpf_X .size() != 0){
-            createJsonFile(array_dumpf_X,array_dumpf_Y, filePath,fileName+"_dumpf");
+        if (array_dumpf_X.size() != 0) {
+            createJsonFile(array_dumpf_X, array_dumpf_Y, filePath, fileName + "_dumpf");
         }
-        if (array_kolik_X.size() != 0){
-            createJsonFile(array_kolik_X,array_kolik_Y, filePath,fileName+"_kolik");
+        if (array_kolik_X.size() != 0) {
+            createJsonFile(array_kolik_X, array_kolik_Y, filePath, fileName + "_kolik");
         }
-        if (array_brennen_X.size() != 0){
-            createJsonFile(array_brennen_X,array_brennen_Y, filePath,fileName+"_brennen");
+        if (array_brennen_X.size() != 0) {
+            createJsonFile(array_brennen_X, array_brennen_Y, filePath, fileName + "_brennen");
         }
-
-
-
-
 
 
     }
-    public static boolean createJsonFile(ArrayList array_x,ArrayList array_y, String filePath, String fileName) {
+
+    public static boolean createJsonFile(ArrayList array_x, ArrayList array_y, String filePath, String fileName) {
         // 标记文件生成是否成功
         boolean flag = true;
         String jsonString;
 
         // 拼接文件完整路径
-        String fullPath =  filePath + File.separator + fileName + ".json";
+        String fullPath = filePath + File.separator + fileName + ".json";
 
         // 生成json格式文件
         try {
@@ -126,17 +119,16 @@ public class SaveJson {
         return flag;
     }
 
-    public static String formatJson(ArrayList array_x,ArrayList array_y) {
-        String result  ="[";
-        for(Object tmp:array_x){
-            result += tmp+",";
+    public static String formatJson(ArrayList array_x, ArrayList array_y) {
+        String result = "[";
+        for (Object tmp : array_x) {
+            result += tmp + ",";
         }
-        for(int i= 0;i<array_y.size();i++){
-            if(i == (array_y.size()-1)){
-                result += array_y.get(i)+"]";
-            }
-            else {
-                result += array_y.get(i)+",";
+        for (int i = 0; i < array_y.size(); i++) {
+            if (i == (array_y.size() - 1)) {
+                result += array_y.get(i) + "]";
+            } else {
+                result += array_y.get(i) + ",";
             }
         }
         return result;

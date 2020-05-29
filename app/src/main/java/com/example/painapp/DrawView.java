@@ -25,6 +25,8 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 
 public class DrawView extends View {
+    private float mX, mY;
+
     public Integer[] x_array;
     public Integer[] y_array;
     public Integer[] x_array_import;
@@ -32,7 +34,6 @@ public class DrawView extends View {
     private int num;
     StringBuilder strb = new StringBuilder();
     StringBuilder strb_import = new StringBuilder();
-
 
 
     private Bitmap mBitmap;
@@ -49,6 +50,9 @@ public class DrawView extends View {
     private Paint mPaint;
     private int paintColor = Color.BLACK;
     private int mMode = 1;
+    public static final int PEN = 1;
+    public static final int ERASER = 2;
+    private static final float TOUCH_TOLERANCE = 4;
 
     private float proportion = (float) 1.2;
 
@@ -86,26 +90,27 @@ public class DrawView extends View {
         mPaint.setStrokeCap(Paint.Cap.ROUND);
         mPaint.setStrokeWidth(1);
 
-        Bitmap b = Bitmap.createBitmap( Math.round(827*proportion),Math.round(1169*proportion),Bitmap.Config.ARGB_8888);
+        Bitmap b = Bitmap.createBitmap(Math.round(827 * proportion), Math.round(1169 * proportion), Bitmap.Config.ARGB_8888);
 
         mCanvas = new Canvas(b);
 
 
         //Log.d("DrawingView", "DrawingView=========================");
     }
+
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        setMeasuredDimension(Math.round(827*proportion),Math.round(1169*proportion));
+        setMeasuredDimension(Math.round(827 * proportion), Math.round(1169 * proportion));
     }
 
-    protected Bitmap getmBitmap(){
+    protected Bitmap getmBitmap() {
         return this.mBitmap;
     }
 
-    protected void setColor(int color){
+    protected void setColor(int color) {
         paintColor = color;
     }
 
-    protected void setMode(int mode){
+    protected void setMode(int mode) {
         this.mMode = mode;
     }
 
@@ -145,13 +150,13 @@ public class DrawView extends View {
 
         mPaint.setColor(Color.BLACK);
         mPaint.setStrokeWidth(1);
-        hBitmap = Bitmap.createBitmap(827,1169,Bitmap.Config.ARGB_8888);
+        hBitmap = Bitmap.createBitmap(827, 1169, Bitmap.Config.ARGB_8888);
         for (int i = 0; i < num; i++) {
-            hBitmap.setPixel((x_array[i]),(1169 - y_array[i]),Color.BLACK);
+            hBitmap.setPixel((x_array[i]), (1169 - y_array[i]), Color.BLACK);
         }
-        canvas.drawBitmap(zoom(hBitmap,proportion),0,0,hBitmapPaint);
+        canvas.drawBitmap(zoom(hBitmap, proportion), 0, 0, hBitmapPaint);
 
-        if (Constant.ifImport){
+        if (Constant.ifImport) {
             try {
                 InputStream is_import = new FileInputStream(Constant.filePath);
                 InputStreamReader isr_import = new InputStreamReader(is_import, "UTF-8");
@@ -176,12 +181,13 @@ public class DrawView extends View {
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-            cBitmap = Bitmap.createBitmap( Math.round(827*proportion),Math.round(1169*proportion),Bitmap.Config.ARGB_8888);
+            cBitmap = Bitmap.createBitmap(Math.round(827 * proportion), Math.round(1169 * proportion), Bitmap.Config.ARGB_8888);
 
             for (int i = 0; i < num; i++) {
-                cBitmap.setPixel(x_array_import[i],1169 - y_array_import[i],Constant.color);
+                cBitmap.setPixel(x_array_import[i], 1169 - y_array_import[i], Constant.color);
             }
-            mCanvas.drawBitmap(zoom(cBitmap,proportion),0,0,mBitmapPaint);;
+            mCanvas.drawBitmap(zoom(cBitmap, proportion), 0, 0, mBitmapPaint);
+
         }
 
         super.onDraw(canvas);
@@ -190,14 +196,13 @@ public class DrawView extends View {
         mPaint.setStrokeWidth(10);
 
 
-
         canvas.drawBitmap(mBitmap, 0, 0, mBitmapPaint);
-        switch (mMode){
-            case 1:
+        switch (mMode) {
+            case PEN:
                 canvas.drawPath(mPath, mPaint);
                 canvas.drawPath(circlePath, circlePaint);
                 break;
-            case 2:
+            case ERASER:
                 mCanvas.drawPath(mPath, mEraserPaint);
                 canvas.drawPath(circlePath, circlePaint);
                 break;
@@ -212,19 +217,19 @@ public class DrawView extends View {
         mCanvas = new Canvas(mBitmap);
 
     }
-    private float mX, mY;
-    private static final float TOUCH_TOLERANCE = 4;
+
+
 
     private void touch_start(float x, float y) {
         mPath.reset();
         mPath.moveTo(x, y);
         mX = x;
         mY = y;
-        switch (mMode){
-            case 1:
+        switch (mMode) {
+            case PEN:
                 mCanvas.drawPath(mPath, mPaint);
                 break;
-            case 2:
+            case ERASER:
                 mCanvas.drawPath(mPath, mEraserPaint);
                 break;
         }
@@ -235,46 +240,39 @@ public class DrawView extends View {
         float dy = Math.abs(y - mY);
         if (dx >= TOUCH_TOLERANCE || dy >= TOUCH_TOLERANCE) {
             mPath.quadTo(mX, mY, (x + mX) / 2, (y + mY) / 2);
-            //mPath.quadTo(mX, mY, x, y);
             mX = x;
             mY = y;
-
-            switch (mMode){
-                case 1:
+            switch (mMode) {
+                case PEN:
                     mCanvas.drawPath(mPath, mPaint);
                     break;
-                case 2:
+                case ERASER:
                     mCanvas.drawPath(mPath, mEraserPaint);
                     break;
             }
-
             circlePath.reset();
             circlePath.addCircle(mX, mY, 30, Path.Direction.CW);
         }
-
-
     }
 
     private void touch_up() {
         mPath.lineTo(mX, mY);
         circlePath.reset();
-        // commit the path to our offscreen
-        switch (mMode){
-            case 1:
+        switch (mMode) {
+            case PEN:
                 mCanvas.drawPath(mPath, mPaint);
                 break;
-            case 2:
+            case ERASER:
                 mCanvas.drawPath(mPath, mEraserPaint);
                 break;
         }
-
         mPath.reset();
     }
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        float x = (int)Math.ceil(event.getX());
-        float y = (int)Math.ceil(event.getY());
+        float x = (int) Math.ceil(event.getX());
+        float y = (int) Math.ceil(event.getY());
 
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
@@ -292,10 +290,11 @@ public class DrawView extends View {
         }
         return true;
     }
-    private static Bitmap zoom(Bitmap bitmap,float proportion) {
+
+    private static Bitmap zoom(Bitmap bitmap, float proportion) {
         Matrix matrix = new Matrix();
-        matrix.postScale(proportion,proportion); //长和宽放大缩小的比例
-        Bitmap resizeBitmap = Bitmap.createBitmap(bitmap,0,0,bitmap.getWidth(),bitmap.getHeight(),matrix,true);
+        matrix.postScale(proportion, proportion); //长和宽放大缩小的比例
+        Bitmap resizeBitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
         return resizeBitmap;
     }
 

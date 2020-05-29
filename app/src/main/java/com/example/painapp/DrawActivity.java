@@ -23,7 +23,7 @@ import java.io.File;
 public class DrawActivity extends AppCompatActivity {
 
 
-    private float proportion = (float)1.2;
+    private float proportion = (float) 1.2;
     private int Pen = 1;
     private int Eraser = 2;
 
@@ -36,20 +36,18 @@ public class DrawActivity extends AppCompatActivity {
         DialogUtils dialogUtils = new DialogUtils();
 
         init();
-        dialogUtils.showCompleteDialog(this,"You need to know before painting");
-
-
+        dialogUtils.showCompleteDialog(this, "You need to know before painting");
 
 
     }
+
     private void init() {
 
         LinearLayout layout = (LinearLayout) findViewById(R.id.root);
         final DrawView view = new DrawView(this);
 
-        view.setMinimumHeight(Math.round(1169*proportion));
-        view.setMinimumWidth(Math.round(827*proportion));
-
+        view.setMinimumHeight(Math.round(1169 * proportion));
+        view.setMinimumWidth(Math.round(827 * proportion));
 
 
         Button bt1 = (Button) findViewById(R.id.Druck);
@@ -109,7 +107,6 @@ public class DrawActivity extends AppCompatActivity {
         });
 
 
-
         view.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -119,29 +116,19 @@ public class DrawActivity extends AppCompatActivity {
         view.invalidate();
         layout.addView(view);
 
-        for (String i: view.getContext().fileList()){
-            System.out.println(i);
-            String target = i.substring(i.length()-9,i.length());
-            System.out.println(target);
-        }
-
 
         Button bt8 = (Button) findViewById(R.id.save);
         bt8.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View v) {
                 SaveJson saveJson = new SaveJson();
-                saveJson.exportJson(view.getmBitmap(),proportion,view.getContext().getFilesDir().getAbsolutePath() ,"patient002");
-
-
+                saveJson.exportJson(view.getmBitmap(), proportion, view.getContext().getFilesDir().getAbsolutePath(), "patient002");
             }
-
-
         });
         Button bt9 = (Button) findViewById(R.id.back);
-        bt9.setOnClickListener(new Button.OnClickListener(){
+        bt9.setOnClickListener(new Button.OnClickListener() {
             public void onClick(View v) {
-                Intent intent = new Intent(DrawActivity.this,MainActivity.class);
+                Intent intent = new Intent(DrawActivity.this, MainActivity.class);
                 startActivity(intent);
                 Constant.ifImport = false;
             }
@@ -153,7 +140,6 @@ public class DrawActivity extends AppCompatActivity {
                 return false;
             }
         });
-
 
 
     }

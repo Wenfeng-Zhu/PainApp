@@ -23,10 +23,8 @@ public class DialogUtils {
         View v = inflater.inflate(R.layout.dialog_tips,null );// 得到加载view
         tipTextView = v.findViewById(R.id.tips_textview);// 提示文字
         tipTextView.setText(msg);// 设置加载信息
-        //tipsImageView = v.findViewById(R.id.tips_image);
-        //tipsImageView.setBackgroundResource(R.drawable.prompt_image);
-
-
+        tipsImageView = v.findViewById(R.id.tips_image);
+        tipsImageView.setBackgroundResource(R.drawable.popup_image);
         ProgressDialog = new Dialog(context, R.style.MyDialogStyle);// 创建自定义样式dialog
         ProgressDialog.setContentView(R.layout.dialog_tips);
         ProgressDialog.setCancelable(true); // 是否可以按“返回键”消失
