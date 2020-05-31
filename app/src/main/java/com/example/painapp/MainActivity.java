@@ -22,7 +22,7 @@ public class MainActivity extends Activity {
         DisplayMetrics dm = getResources().getDisplayMetrics();
         int screenWidth = dm.widthPixels;
         int screenHeight = dm.heightPixels;
-        Constant.proportion = (float) (1200)/(float) (827);
+        Constant.proportion = (float) (screenWidth)/(float) (827);
 
 
         //Button pointing to Draw Page
