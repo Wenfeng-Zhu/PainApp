@@ -9,11 +9,13 @@ import android.text.Layout;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -23,7 +25,7 @@ import java.io.File;
 public class DrawActivity extends AppCompatActivity {
 
 
-    private float proportion = (float) 1.2;
+    private float proportion = Constant.proportion;
     private int Pen = 1;
     private int Eraser = 2;
 
@@ -42,6 +44,7 @@ public class DrawActivity extends AppCompatActivity {
     }
 
     private void init() {
+        ScrollView scrollView = (ScrollView)findViewById(R.id.drawArea);
 
         LinearLayout layout = (LinearLayout) findViewById(R.id.root);
         final DrawView view = new DrawView(this);
@@ -103,6 +106,7 @@ public class DrawActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 view.setMode(Eraser);
+
             }
         });
 

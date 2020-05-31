@@ -139,8 +139,8 @@ public class FileSelect extends AppCompatActivity {
                 Map<String, Object> listItem = new HashMap<String, Object>();
                 //如果当前File是文件夹，使用folder图标；否则使用file图标
                 if (files[i].isDirectory()) listItem.put("icon", R.drawable.icons_folder);//文件夹
-                    //else if(files[i].isFi)
-                else listItem.put("icon", R.drawable.icons_file);//文件
+                else
+                    listItem.put("icon", R.drawable.icons_file);//文件
                 listItem.put("fileName", files[i].getName());
                 //添加List项
                 listItems.add(listItem);

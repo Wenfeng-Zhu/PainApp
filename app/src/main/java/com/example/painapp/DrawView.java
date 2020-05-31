@@ -54,7 +54,7 @@ public class DrawView extends View {
     public static final int ERASER = 2;
     private static final float TOUCH_TOLERANCE = 4;
 
-    private float proportion = (float) 1.2;
+    private float proportion = Constant.proportion;
 
     public DrawView(Context context) {
         super(context);
@@ -90,7 +90,9 @@ public class DrawView extends View {
         mPaint.setStrokeCap(Paint.Cap.ROUND);
         mPaint.setStrokeWidth(1);
 
-        Bitmap b = Bitmap.createBitmap(Math.round(827 * proportion), Math.round(1169 * proportion), Bitmap.Config.ARGB_8888);
+        Bitmap b = Bitmap.createBitmap(827, 1169, Bitmap.Config.ARGB_8888);
+        Bitmap b1 = zoom(b,proportion);
+        //mBitmap = b1;
 
         mCanvas = new Canvas(b);
 
@@ -116,7 +118,8 @@ public class DrawView extends View {
 
 
     protected void onDraw(Canvas canvas) {
-        //Bitmap bitmap = Bitmap.createBitmap(827, 1169, Bitmap.Config.ARGB_8888);
+        Bitmap bitmap = Bitmap.createBitmap(827, 1169, Bitmap.Config.ARGB_8888);
+        //mBitmap = zoom(bitmap,proportion);
 
         try {
             InputStream is = getResources().getAssets().open("original.json");
@@ -194,6 +197,7 @@ public class DrawView extends View {
 
         mPaint.setColor(paintColor);
         mPaint.setStrokeWidth(10);
+        //onSizeChanged(Math.round(827*proportion),Math.round(1169*proportion),827,1169);
 
 
         canvas.drawBitmap(mBitmap, 0, 0, mBitmapPaint);
@@ -294,8 +298,7 @@ public class DrawView extends View {
     private static Bitmap zoom(Bitmap bitmap, float proportion) {
         Matrix matrix = new Matrix();
         matrix.postScale(proportion, proportion); //长和宽放大缩小的比例
-        Bitmap resizeBitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
-        return resizeBitmap;
+        return Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
     }
 
 

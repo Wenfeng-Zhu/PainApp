@@ -8,74 +8,86 @@
     <LinearLayout
         android:id="@+id/allLayout"
         android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_height="match_parent"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <LinearLayout
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="63dp"
-            android:orientation="horizontal">
+            android:layout_height="wrap_content">
 
-            <Button
-                android:id="@+id/Druck"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:background="@drawable/button_druck"
-                android:text="Druck" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
 
-            <Button
-                android:id="@+id/Stechend"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:background="@drawable/button_stechend"
-                android:text="Stechend" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="63dp"
+                    android:orientation="horizontal">
 
-            <Button
-                android:id="@+id/Bohrend"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:background="@drawable/button_bohrend"
-                android:text="Bohrend" />
+                    <Button
+                        android:id="@+id/Druck"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:background="@drawable/button_druck"
+                        android:text="Druck" />
 
-        </LinearLayout>
+                    <Button
+                        android:id="@+id/Stechend"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:background="@drawable/button_stechend"
+                        android:text="Stechend" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="63dp"
-            android:orientation="horizontal">
+                    <Button
+                        android:id="@+id/Bohrend"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:background="@drawable/button_bohrend"
+                        android:text="Bohrend" />
 
-            <Button
-                android:id="@+id/Dumpf"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:background="@drawable/button_dumpf"
-                android:text="Dumpf" />
+                </LinearLayout>
 
-            <Button
-                android:id="@+id/Kolik"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:background="@drawable/button_kolik"
-                android:text="Kolik" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="63dp"
+                    android:orientation="horizontal">
 
-            <Button
-                android:id="@+id/Brennen"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:background="@drawable/button_brennen"
-                android:text="Brennen" />
+                    <Button
+                        android:id="@+id/Dumpf"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:background="@drawable/button_dumpf"
+                        android:text="Dumpf" />
 
-        </LinearLayout>
+                    <Button
+                        android:id="@+id/Kolik"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:background="@drawable/button_kolik"
+                        android:text="Kolik" />
+
+                    <Button
+                        android:id="@+id/Brennen"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:background="@drawable/button_brennen"
+                        android:text="Brennen" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+        </ScrollView>
 
         <Button
             android:id="@+id/button_eraser"
@@ -83,14 +95,18 @@
             android:layout_height="wrap_content"
             android:text="Eraser" />
 
-        <LinearLayout
-            android:id="@+id/root"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_gravity="center_horizontal"  >
+        <ScrollView
+            android:id="@+id/drawArea"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-        </LinearLayout>
+            <LinearLayout
+                android:id="@+id/root"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_horizontal"
+                android:orientation="vertical"></LinearLayout>
+        </ScrollView>
 
         <LinearLayout
             android:layout_width="match_parent"
