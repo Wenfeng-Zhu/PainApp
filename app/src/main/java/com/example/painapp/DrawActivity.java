@@ -1,26 +1,25 @@
 package com.example.painapp;
 
-import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
+import android.graphics.Bitmap;
+import android.graphics.Path;
 import android.os.Bundle;
-import android.text.Layout;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
+import android.widget.Toast;
 
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
-import java.io.File;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class DrawActivity extends AppCompatActivity {
 
@@ -28,6 +27,9 @@ public class DrawActivity extends AppCompatActivity {
     private float proportion = Constant.proportion;
     private int Pen = 1;
     private int Eraser = 2;
+    Context context = this;
+    private Path lastPath;
+    private  Map<String,Integer> map;
 
 
     @Override
@@ -37,13 +39,44 @@ public class DrawActivity extends AppCompatActivity {
         setContentView(R.layout.activity_draw);
         DialogUtils dialogUtils = new DialogUtils();
 
+
         init();
         dialogUtils.showCompleteDialog(this, "You need to know before painting");
 
 
     }
+    protected void addItem(ArrayList<Button> buttonList){
+
+        LinearLayout buttonsArea = (LinearLayout)findViewById(R.id.buttonsArea);
+
+        LinearLayout.LayoutParams params_0 = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.WRAP_CONTENT);
+
+        final LinearLayout linearLayout = new LinearLayout(this);
+        linearLayout.setOrientation(LinearLayout.HORIZONTAL);
+        linearLayout.setWeightSum(3);
+        linearLayout.setLayoutParams(params_0);
+
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(getResources().getDimensionPixelSize(R.dimen.buttonWidth),LinearLayout.LayoutParams.WRAP_CONTENT,1.0f);
+
+        final Button bt1 = new Button(this);
+        bt1.setLayoutParams(params);
+        final Button bt2 = new Button(this);
+        bt2.setLayoutParams(params);
+        final Button bt3 = new Button(this);
+        bt3.setLayoutParams(params);
+
+        linearLayout.addView(bt1);
+        linearLayout.addView(bt2);
+        linearLayout.addView(bt3);
+        buttonList.add(bt1);
+        buttonList.add(bt2);
+        buttonList.add(bt3);
+        buttonsArea.addView(linearLayout);
+
+    }
 
     private void init() {
+
         ScrollView scrollView = (ScrollView)findViewById(R.id.drawArea);
 
         LinearLayout layout = (LinearLayout) findViewById(R.id.root);
@@ -52,60 +85,94 @@ public class DrawActivity extends AppCompatActivity {
         view.setMinimumHeight(Math.round(1169 * proportion));
         view.setMinimumWidth(Math.round(827 * proportion));
 
+        //ArrayList<String> typeList = this.getIntent().getStringArrayListExtra("typeList");
+        map = (Map<String, Integer>) this.getIntent().getSerializableExtra("map");
 
-        Button bt1 = (Button) findViewById(R.id.Druck);
-        bt1.setOnClickListener(new Button.OnClickListener() {
+        view.setMap(map);
+
+
+        ArrayList<Button> buttonList = new ArrayList<Button>();
+        final int num = map.size();
+        double time = Math.ceil((double)num/3.0);
+        for (int i = 0;i < time; i++){
+            addItem(buttonList);
+        }
+        int k = 0;
+        for (final Map.Entry<String,Integer> map1:map.entrySet()){
+            if(k == 0){
+                view.setPaintColor(map1.getValue());
+            }
+            buttonList.get(k).setText(map1.getKey());
+            buttonList.get(k).setBackgroundColor(map1.getValue());
+            buttonList.get(k).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    view.setPaintColor(map1.getValue());
+                    view.setMod(Pen);
+                    view.pressed(true);
+                    view.invalidate();
+                }
+            });
+            k++;
+        }
+        Button button_undo = (Button)findViewById(R.id.button_undo);
+
+        button_undo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                view.setColor(Color.BLACK);
-                view.setMode(Pen);
+                if (!view.getPathList().isEmpty()){
+
+                    LinkedHashMap<Path,Integer> pathList = view.getPathList();
+                    //System.out.println("PathList非同测试"+(pathList.get(0)==pathList.get(1)));
+                    Iterator<Path> iterator = pathList.keySet().iterator();
+                    while (iterator.hasNext()) {
+                        lastPath = iterator.next();
+                    }
+                    if(pathList.get(lastPath)==view.getmEraserPaint().getColor()){
+                        Map<String, ArrayList<Path>> PathCollection = view.getPathCollection();
+                        ArrayList<Path> paths = PathCollection.get("eraser");
+                        paths.remove(paths.size()-1);
+                        PathCollection.put("eraser",paths);
+                        view.setPathCollection(PathCollection);
+
+                        pathList.remove(lastPath);
+                        view.setPathList(pathList);
+                        //view.setUndo(true);
+                        view.invalidate();
+                    }
+                    else {
+                        Map<String, ArrayList<Path>> PathCollection = view.getPathCollection();
+                        ArrayList<Path> paths = PathCollection.get(view.getTmap().get(pathList.get(lastPath)));
+                        paths.remove(paths.size()-1);
+                        PathCollection.put(view.getTmap().get(pathList.get(lastPath)),paths);
+                        view.setPathCollection(PathCollection);
+                        pathList.remove(lastPath);
+                        view.setPathList(pathList);
+                        //view.setUndo(true);
+                        view.invalidate();
+                    }
+
+                }
+                else {
+                    Toast toast = Toast.makeText(context, "There is nothing to undo ~ (×_×) ~", Toast.LENGTH_SHORT);
+                    toast.setGravity(Gravity.CENTER,0,0);
+                    toast.show();
+                }
+
+
+
             }
         });
-        Button bt2 = (Button) findViewById(R.id.Stechend);
-        bt2.setOnClickListener(new Button.OnClickListener() {
+
+
+
+
+
+        Button button_eraser = (Button) findViewById(R.id.button_eraser);
+        button_eraser.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View v) {
-                view.setColor(Color.RED);
-                view.setMode(Pen);
-            }
-        });
-        Button bt3 = (Button) findViewById(R.id.Bohrend);
-        bt3.setOnClickListener(new Button.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                view.setColor(Color.GREEN);
-                view.setMode(Pen);
-            }
-        });
-        Button bt4 = (Button) findViewById(R.id.Dumpf);
-        bt4.setOnClickListener(new Button.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                view.setColor(Color.BLUE);
-                view.setMode(Pen);
-            }
-        });
-        Button bt5 = (Button) findViewById(R.id.Kolik);
-        bt5.setOnClickListener(new Button.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                view.setColor(Color.GRAY);
-                view.setMode(Pen);
-            }
-        });
-        Button bt6 = (Button) findViewById(R.id.Brennen);
-        bt6.setOnClickListener(new Button.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                view.setColor(0xFFFFC0CB);
-                view.setMode(Pen);
-            }
-        });
-        Button bt7 = (Button) findViewById(R.id.button_eraser);
-        bt7.setOnClickListener(new Button.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                view.setMode(Eraser);
+                view.setMod(Eraser);
 
             }
         });
@@ -121,16 +188,30 @@ public class DrawActivity extends AppCompatActivity {
         layout.addView(view);
 
 
-        Button bt8 = (Button) findViewById(R.id.save);
-        bt8.setOnClickListener(new Button.OnClickListener() {
+
+
+
+        Button button_save = (Button) findViewById(R.id.save);
+        button_save.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View v) {
-                SaveJson saveJson = new SaveJson();
-                saveJson.exportJson(view.getmBitmap(), proportion, view.getContext().getFilesDir().getAbsolutePath(), "patient002");
+
+                if (view.saveScreen()){
+                    DialogUtils saveDialog = new DialogUtils();
+                    saveDialog.savePasswordDialog(context,view.getSbMap(), proportion, view.getContext().getFilesDir().getAbsolutePath());
+                }
+                else {
+                    Toast toast = Toast.makeText(context, "There is nothing to save ~ (×_×) ~", Toast.LENGTH_SHORT);
+                    toast.setGravity(Gravity.CENTER,0,0);
+                    toast.show();
+                }
+                //System.out.println("按钮功能测试——1！！！！！！");
+
+
             }
         });
-        Button bt9 = (Button) findViewById(R.id.back);
-        bt9.setOnClickListener(new Button.OnClickListener() {
+        Button button_back = (Button) findViewById(R.id.back);
+        button_back.setOnClickListener(new Button.OnClickListener() {
             public void onClick(View v) {
                 Intent intent = new Intent(DrawActivity.this, MainActivity.class);
                 startActivity(intent);
@@ -138,12 +219,7 @@ public class DrawActivity extends AppCompatActivity {
             }
         });
 
-        view.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                return false;
-            }
-        });
+
 
 
     }

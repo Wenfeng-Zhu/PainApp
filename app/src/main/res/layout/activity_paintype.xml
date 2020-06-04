@@ -39,8 +39,7 @@
                     android:id="@+id/button_1"
                     android:layout_width="70dp"
                     android:layout_height="60dp"
-                    android:layout_weight="1"
-                    android:text="Button" />
+                    android:layout_weight="1" />
 
             </LinearLayout>
 
@@ -60,9 +59,9 @@
                     android:id="@+id/button_2"
                     android:layout_width="70dp"
                     android:layout_height="60dp"
-                    android:layout_weight="1"
-                    android:text="Button" />
+                    android:layout_weight="1" />
             </LinearLayout>
+
         </LinearLayout>
 
         <ImageButton
@@ -70,6 +69,12 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:srcCompat="@android:drawable/ic_input_add" />
+
+        <Button
+            android:id="@+id/button_newType"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Add a New Type" />
 
         <Button
             android:id="@+id/button_next"

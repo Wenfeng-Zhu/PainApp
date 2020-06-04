@@ -12,83 +12,52 @@ import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.nio.file.Files;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class SaveJson {
     private static Context context;
-    private Bitmap mBitmap;
-    ArrayList array_druck_X = new ArrayList();
-    ArrayList array_druck_Y = new ArrayList();
-    ArrayList array_stechend_X = new ArrayList();
-    ArrayList array_stechend_Y = new ArrayList();
-    ArrayList array_bohrend_X = new ArrayList();
-    ArrayList array_bohrend_Y = new ArrayList();
-    ArrayList array_dumpf_X = new ArrayList();
-    ArrayList array_dumpf_Y = new ArrayList();
-    ArrayList array_kolik_X = new ArrayList();
-    ArrayList array_kolik_Y = new ArrayList();
-    ArrayList array_brennen_X = new ArrayList();
-    ArrayList array_brennen_Y = new ArrayList();
+    private Bitmap bitmap;
+
+    private ArrayList<Integer> array_X = new ArrayList<Integer>();
+    private ArrayList<Integer> array_Y = new ArrayList<Integer>();
+
+
+
+    private Map<String, ArrayList<Integer>> map = new HashMap<String, ArrayList<Integer>>();
 
     public SaveJson() {
     }
 
-    public void exportJson(Bitmap bitmap, float proportion, String filePath, String fileName) {
-        mBitmap = bitmap;
-        for (int i = 0; i < Math.round(827 * proportion); i++) {
-            for (int j = 0; j < Math.round(1169 * proportion); j++) {
-                if (mBitmap.getPixel(i, j) != 0) {
-                    if (mBitmap.getPixel(i, j) == Color.BLACK) {
-                        array_druck_X.add(Math.round(i / proportion));
-                        array_druck_Y.add(1169 - Math.round(j / proportion));
-                    } else if (mBitmap.getPixel(i, j) == Color.RED) {
-                        array_stechend_X.add(Math.round(i / proportion));
-                        array_stechend_Y.add(1169 - Math.round(j / proportion));
-                    } else if (mBitmap.getPixel(i, j) == Color.GREEN) {
-                        array_bohrend_X.add(Math.round(i / proportion));
-                        array_bohrend_Y.add(1169 - Math.round(j / proportion));
-                    } else if (mBitmap.getPixel(i, j) == Color.BLUE) {
-                        array_dumpf_X.add(Math.round(i / proportion));
-                        array_dumpf_Y.add(1169 - Math.round(j / proportion));
-                    } else if (mBitmap.getPixel(i, j) == Color.GRAY) {
-                        array_kolik_X.add(Math.round(i / proportion));
-                        array_kolik_Y.add(1169 - Math.round(j / proportion));
-                    } else if (mBitmap.getPixel(i, j) == 0xFFFFC0CB) {
-                        array_brennen_X.add(Math.round(i / proportion));
-                        array_brennen_Y.add(1169 - Math.round(j / proportion));
+    public void exportJson(Map<String, Bitmap> map, float proportion, String filePath, String fileNum) {
+        System.out.println("导入数据函数测试！！！！！！！");
+        for (String string : map.keySet()) {
+            String fileName = "Patient"+ fileNum+"_"+string;
+            for (int i = 0; i < Math.round(827 * proportion); i++) {
+                for (int j = 0; j < Math.round(1169 * proportion); j++) {
+                    if (map.get(string).getPixel(i, j) != 0) {
+                        array_X.add(Math.round(i / proportion));
+                        array_Y.add(1169 - Math.round(j / proportion));
                     }
 
                 }
             }
+            ArrayList<Integer> array_All = (ArrayList<Integer>) array_X.clone();
+            array_All.addAll(array_Y);
+            createJsonFile(array_All, filePath, fileName);
         }
-        if (array_druck_X.size() != 0) {
-            createJsonFile(array_druck_X, array_druck_Y, filePath, fileName + "_druck");
-        }
-        if (array_stechend_X.size() != 0) {
-            createJsonFile(array_stechend_X, array_stechend_Y, filePath, fileName + "_stechend");
-        }
-        if (array_bohrend_X.size() != 0) {
-            createJsonFile(array_bohrend_X, array_bohrend_Y, filePath, fileName + "_bohrend");
-        }
-        if (array_dumpf_X.size() != 0) {
-            createJsonFile(array_dumpf_X, array_dumpf_Y, filePath, fileName + "_dumpf");
-        }
-        if (array_kolik_X.size() != 0) {
-            createJsonFile(array_kolik_X, array_kolik_Y, filePath, fileName + "_kolik");
-        }
-        if (array_brennen_X.size() != 0) {
-            createJsonFile(array_brennen_X, array_brennen_Y, filePath, fileName + "_brennen");
-        }
-
 
     }
 
-    public static boolean createJsonFile(ArrayList array_x, ArrayList array_y, String filePath, String fileName) {
+    public static boolean createJsonFile(ArrayList<Integer> array_all, String filePath, String fileName) {
         // 标记文件生成是否成功
+        System.out.println("生成文件函数测试开始！！！！！！");
         boolean flag = true;
         String jsonString;
 
         // 拼接文件完整路径
         String fullPath = filePath + File.separator + fileName + ".json";
+        System.out.println("生成文件测试节点——1");
 
         // 生成json格式文件
         try {
@@ -100,15 +69,19 @@ public class SaveJson {
             if (file.exists()) { // 如果已存在,删除旧文件
                 file.delete();
             }
+            System.out.println("生成文件测试节点——2");
             file.createNewFile();
-
+            System.out.println("生成文件测试节点——2.1");
             // 格式化json字符串
-            jsonString = SaveJson.formatJson(array_x, array_y);
-
+            jsonString = SaveJson.formatJson(array_all);
+            System.out.println("生成文件测试节点——3");
             // 将格式化后的字符串写入文件
             Writer write = new OutputStreamWriter(new FileOutputStream(file), "UTF-8");
+            System.out.println("生成文件测试节点——4");
             write.write(jsonString);
+            System.out.println("生成文件测试节点——5");
             write.flush();
+            System.out.println("生成文件测试节点——6");
             write.close();
         } catch (Exception e) {
             flag = false;
@@ -116,22 +89,24 @@ public class SaveJson {
         }
 
         // 返回是否成功的标记
+        System.out.println("生成文件成功标识！！！！！！！！！！");
         return flag;
     }
 
-    public static String formatJson(ArrayList array_x, ArrayList array_y) {
+    public static String formatJson(ArrayList<Integer> array_all) {
         String result = "[";
-        for (Object tmp : array_x) {
+        for (Object tmp : array_all) {
             result += tmp + ",";
         }
-        for (int i = 0; i < array_y.size(); i++) {
-            if (i == (array_y.size() - 1)) {
-                result += array_y.get(i) + "]";
-            } else {
-                result += array_y.get(i) + ",";
-            }
-        }
+        result += "]";
+//        for (int i = 0; i < array_y.size(); i++) {
+//            if (i == (array_y.size() - 1)) {
+//                result += array_y.get(i) + "]";
+//            } else {
+//                result += array_y.get(i) + ",";
+//            }
+//        }
         return result;
     }
-
 }
+

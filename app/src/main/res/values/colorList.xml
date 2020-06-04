@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="colorList">
+        <item>#FF9D2347</item>
+        <item>#FF885FA6</item>
+        <item>#FFE94E58</item>
+        <item>#FF41265E</item>
+        <item>#FFDC7C6D</item>
+        <item>#FF898BC3</item>
+        <item>#FFE3B2AF</item>
+        <item>#FF4CB4E4</item>
+        <item>#FFE7CAC6</item>
+        <item>#FF3A5DAA</item>
+        <item>#FFF4E9CE</item>
+        <item>#FFE9D1E5</item>
+        <item>#FFDCC235</item>
+        <item>#FFD8A7CB</item>
+        <item>#FFCF9919</item>
+        <item>#FFBA5678</item>
+        <item>#FF9B6440</item>
+        <item>#FF724A36</item>
+
+        <!--        <item>#FF207582</item>-->
+        <!--        -->
+        <!--        <item>#FF8DC881</item>-->
+        <!--        -->
+        <!--        <item>#FF4DBAA1</item>-->
+        <!--        -->
+        <!--        <item>#FFA59E38</item>-->
+        <!--        -->
+        <!--        <item>#FF597455</item>-->
+
+
+
+
+    </string-array>
+</resources>

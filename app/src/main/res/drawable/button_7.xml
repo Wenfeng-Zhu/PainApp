@@ -6,8 +6,13 @@
         android:right="1dip"
         android:bottom="1dip"/>
 
-    <stroke android:width="5dip"
-        android:color="#FFFF0000"
+    <corners android:topLeftRadius="10dip"
+        android:bottomLeftRadius="10dip"
+        android:bottomRightRadius="10dip"
+        android:topRightRadius="10dp"/>
+
+    <stroke android:width="2dip"
+        android:color="#E3B2AF"
         />
     <!--边框宽度-->
     <size android:width="40dip"

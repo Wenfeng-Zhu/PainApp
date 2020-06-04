@@ -1,18 +1,28 @@
 package com.example.painapp;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import androidx.annotation.RequiresApi;
+
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+
 
 public class MainActivity extends Activity {
     public static final int FILE_RESULT_CODE = 1;
     public static final int RESULT_OK = 1;
+    Context context = this;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,8 +47,25 @@ public class MainActivity extends Activity {
         //Button pointing to File Page
         Button bt2 = (Button) findViewById(R.id.goToSelect);
         bt2.setOnClickListener(new Button.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.KITKAT)
             @Override
             public void onClick(View v) {
+
+//                try {
+//                    String filePath = context.getFilesDir().getAbsolutePath()+File.separator+"colorList.txt";
+//                    File typeList = new File(filePath);
+//                    typeList.createNewFile();
+//                    try (FileWriter writer = new FileWriter(typeList);BufferedWriter out = new BufferedWriter(writer)){
+//                        String[] list = context.getResources().getStringArray(R.array.colorList);
+//                        for (String string:list){
+//                            out.write(string.toUpperCase()+"\r\n");
+//                        }
+//                        out.flush();
+//                    }
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
+
                 Intent intent = new Intent(MainActivity.this, FileSelect.class);
                 //When the new interface is closed, the data is returned.
                 startActivityForResult(intent, FILE_RESULT_CODE);
@@ -60,27 +87,9 @@ public class MainActivity extends Activity {
                 textView.setText("The folder you choose is：" + "\n" + filePath);
                 //Determine the corresponding color according to the second half of the path string
                 String str = filePath;
-                String substr = str.substring(filePath.length() - 9);
-                switch (substr) {
-                    case "ruck.json":
-                        Constant.color = Color.BLACK;
-                        break;
-                    case "hend.json":
-                        Constant.color = Color.RED;
-                        break;
-                    case "rend.json":
-                        Constant.color = Color.GREEN;
-                        break;
-                    case "umpf.json":
-                        Constant.color = Color.BLUE;
-                        break;
-                    case "olik.json":
-                        Constant.color = Color.GRAY;
-                        break;
-                    case "nnen.json":
-                        Constant.color = 0xFFFFC0CB;
-                        break;
-                }
+
+                Constant.fileName = str.substring(filePath.lastIndexOf("_")+1,filePath.length()-5);
+
                 Constant.ifImport = true;
             }
         }

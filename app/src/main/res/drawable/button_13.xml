@@ -5,9 +5,13 @@
     <padding android:left="1dip"
         android:right="1dip"
         android:bottom="1dip"/>
+    <corners android:topLeftRadius="10dip"
+        android:bottomLeftRadius="10dip"
+        android:bottomRightRadius="10dip"
+        android:topRightRadius="10dp"/>
 
-    <stroke android:width="5dip"
-        android:color="#FF0000FF"
+    <stroke android:width="2dip"
+        android:color="#DCC235"
         />
     <!--边框宽度-->
     <size android:width="40dip"

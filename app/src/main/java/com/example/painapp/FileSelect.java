@@ -62,10 +62,16 @@ public class FileSelect extends AppCompatActivity {
                     //Bundle bundle = new Bundle();
 
                     //bundle.putString("filePath",filePath);
-                    intent.putExtra("filePath", filePath);
+                    String suffix = filePath.substring(filePath.length()-4);
+                    if(suffix.equals("json")){
+                        intent.putExtra("filePath", filePath);
+                        setResult(RESULT_OK, intent);
+                        finish();
+                    }
+                    else {
+                        Toast.makeText(FileSelect.this, "Please select a json file!", Toast.LENGTH_SHORT).show();
+                    }
 
-                    setResult(RESULT_OK, intent);
-                    finish();
                     //startActivity(intent);
                 } else {
                     //获取currentFiles[position]路径下的所有文件
