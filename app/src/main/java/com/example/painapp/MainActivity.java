@@ -3,7 +3,6 @@ package com.example.painapp;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
@@ -12,11 +11,6 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.RequiresApi;
-
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
 
 
 public class MainActivity extends Activity {
@@ -66,7 +60,7 @@ public class MainActivity extends Activity {
 //                    e.printStackTrace();
 //                }
 
-                Intent intent = new Intent(MainActivity.this, FileSelect.class);
+                Intent intent = new Intent(MainActivity.this, FileSelectActivity.class);
                 //When the new interface is closed, the data is returned.
                 startActivityForResult(intent, FILE_RESULT_CODE);
             }

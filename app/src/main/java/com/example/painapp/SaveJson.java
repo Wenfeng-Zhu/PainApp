@@ -19,23 +19,26 @@ public class SaveJson {
     private static Context context;
     private Bitmap bitmap;
 
-    private ArrayList<Integer> array_X = new ArrayList<Integer>();
-    private ArrayList<Integer> array_Y = new ArrayList<Integer>();
+
 
 
 
     private Map<String, ArrayList<Integer>> map = new HashMap<String, ArrayList<Integer>>();
-
+    private ArrayList<Integer> array_X = new ArrayList<Integer>();
+    private ArrayList<Integer> array_Y = new ArrayList<Integer>();
     public SaveJson() {
     }
 
     public void exportJson(Map<String, Bitmap> map, float proportion, String filePath, String fileNum) {
-        System.out.println("导入数据函数测试！！！！！！！");
+
+        //System.out.println("导入数据函数测试！！！！！！！");
         for (String string : map.keySet()) {
             String fileName = "Patient"+ fileNum+"_"+string;
             for (int i = 0; i < Math.round(827 * proportion); i++) {
                 for (int j = 0; j < Math.round(1169 * proportion); j++) {
+
                     if (map.get(string).getPixel(i, j) != 0) {
+                        System.out.println("————————————Bitmap测试————————————————");
                         array_X.add(Math.round(i / proportion));
                         array_Y.add(1169 - Math.round(j / proportion));
                     }
@@ -44,6 +47,8 @@ public class SaveJson {
             }
             ArrayList<Integer> array_All = (ArrayList<Integer>) array_X.clone();
             array_All.addAll(array_Y);
+            array_X.clear();
+            array_Y.clear();
             createJsonFile(array_All, filePath, fileName);
         }
 
@@ -94,19 +99,24 @@ public class SaveJson {
     }
 
     public static String formatJson(ArrayList<Integer> array_all) {
-        String result = "[";
-        for (Object tmp : array_all) {
-            result += tmp + ",";
+        StringBuilder stringBuilder = new StringBuilder("[");
+        for (int i = 0;i<array_all.size()-1;i++){
+            stringBuilder.append(array_all.get(i));
+            stringBuilder.append(",");
         }
-        result += "]";
-//        for (int i = 0; i < array_y.size(); i++) {
-//            if (i == (array_y.size() - 1)) {
-//                result += array_y.get(i) + "]";
-//            } else {
-//                result += array_y.get(i) + ",";
-//            }
+        stringBuilder.append(array_all.get(array_all.size()-1));
+        stringBuilder.append("]");
+        return stringBuilder.toString();
+
+
+//        String result = "[";
+//        for (Object tmp : array_all) {
+//            result += tmp + ",";
 //        }
-        return result;
+//        result = result.substring(0,result.length()-1);
+//        result += "]";
+//
+//        return result;
     }
 }
 

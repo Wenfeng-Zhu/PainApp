@@ -48,8 +48,8 @@ public class DrawView extends View {
     StringBuilder strb = new StringBuilder();
     StringBuilder strb_import = new StringBuilder();
 
-    private Bitmap saveBitmap;
-    private Canvas saveCanvas;
+//    private Bitmap saveBitmap;
+//    private Canvas saveCanvas;
 
     private Bitmap mBitmap;
     private Bitmap hBitmap;
@@ -92,8 +92,8 @@ public class DrawView extends View {
         this.context = context;
 
         sbMap = new HashMap<String, Bitmap>();
-        saveBitmap = Bitmap.createBitmap(Math.round(827 * proportion), Math.round(1169 * proportion), Bitmap.Config.ARGB_8888);
-        saveCanvas = new Canvas(saveBitmap);
+//        saveBitmap = Bitmap.createBitmap(Math.round(827 * proportion), Math.round(1169 * proportion), Bitmap.Config.ARGB_8888);
+//        saveCanvas = new Canvas(saveBitmap);
 
         this.importBackGround();
         Undo = false;
@@ -283,7 +283,7 @@ public class DrawView extends View {
             cBitmap = Bitmap.createBitmap(Math.round(827 * proportion), Math.round(1169 * proportion), Bitmap.Config.ARGB_8888);
 
             for (int i = 0; i < x_array_import.length; i++) {
-                System.out.println("颜色赋值测试————————————" + Constant.color);
+                //System.out.println("颜色赋值测试————————————" + Constant.color);
                 cBitmap.setPixel(x_array_import[i], 1169 - y_array_import[i], Constant.color);
             }
         }
@@ -327,6 +327,7 @@ public class DrawView extends View {
         canvas.drawBitmap(zoom(hBitmap, proportion), 0, 0, hBitmapPaint);
         if (Constant.ifImport) {
             canvas.drawBitmap(zoom(cBitmap, proportion), 0, 0, cBitmapPaint);
+            //canvas.drawBitmap(mBitmap,0,0,mBitmapPaint);
             invalidate();
         }
 
@@ -374,53 +375,67 @@ public class DrawView extends View {
 
 
     protected boolean saveScreen() {
-        Paint paint = new Paint((Paint.DITHER_FLAG));
+
+        //Paint paint = new Paint((Paint.DITHER_FLAG));
         int num = 0;
-        for (Map.Entry<String,ArrayList<Path>> entry:PathCollection.entrySet()){
-            //System.out.println("——————————————————容器为空测试————————————————————");
-            if (entry.getValue().isEmpty()){
-                num ++;
-                //System.out.println("——————————————————容器为空测试 1 ————————————————————");
+        for (Map.Entry<String, ArrayList<Path>> entry : PathCollection.entrySet()) {
+            if (entry.getValue().isEmpty()) {
+                num++;
             }
         }
-        if (PathCollection.size() == num){
-            return false;
-        }
-        else {
-            //System.out.println("————————————————————容器长度测试————————————————————————————————"+PathCollection.keySet().size());
-            for (String string : PathCollection.keySet()) {
-                //System.out.println("画面信息获取测试——1！！！！！");
-                if (PathCollection.get(string).isEmpty()){
 
-                }else {
-                    //System.out.println("保存文件长度测试——————————"+PathCollection.get(string).size());
-                    if (string.equals("eraser")) {
+        Bitmap saveBitmap = Bitmap.createBitmap(Math.round(827 * proportion), Math.round(1169 * proportion), Bitmap.Config.ARGB_8888);
+        if (PathCollection.size() == num) {
+            return false;
+        } else {
+//            for (Canvas canvas : canvasBitmapMap.keySet()) {
+
+                for (String string : PathCollection.keySet()) {
+                    Canvas saveCanvas  = new Canvas(saveBitmap);
+                    if (PathCollection.get(string).isEmpty()) {
 
                     } else {
-                        paint.setColor(map.get(string));
-                        //System.out.println("画面信息获取测试——2！！！！！");
-                        for (Path path : PathCollection.get(string)) {
-                            saveCanvas.drawPath(path, mPaint);
-                        }
-                        for (Path path : PathCollection.get("eraser")) {
-                            saveCanvas.drawPath(path, mEraserPaint);
-                        }
-                        if (string == Constant.fileName) {
-                            Bitmap bitmap = mergeBitmap(saveBitmap, cBitmap);
-                            sbMap.put(string, bitmap);
+                        if (string.equals("eraser")) {
+
                         } else {
-                            Bitmap bitmap = saveBitmap;
-                            sbMap.put(string, bitmap);
+                            mPaint.setColor(map.get(string));
+                            for (Path path : PathCollection.get(string)) {
+                                Path path1 = new Path();
+                                path1.set(path);
+                                saveCanvas.drawPath(path1, mPaint);
+                                path1.reset();
+                            }
+                            for (Path path : PathCollection.get("eraser")) {
+                                Path path1 = new Path();
+                                path1.set(path);
+                                saveCanvas.drawPath(path1, mEraserPaint);
+                                path1.reset();
+                            }
+                            System.out.println("疼痛类型打印————————————"+Constant.fileName);
+                            if (string.equals(Constant.fileName)) {
+                                System.out.println("啊圣诞节复活节快速导航范德萨积分");
+                                Bitmap bitmap = mergeBitmap(saveBitmap, cBitmap,mPaint).copy(Bitmap.Config.ARGB_8888,true);
+                                sbMap.put(string, bitmap);
+                            } else {
+                                sbMap.put(string, saveBitmap.copy(Bitmap.Config.ARGB_8888, true));
+                                clear(saveCanvas);
+                            }
+
                         }
+
                     }
+
                 }
-                //ArrayList<Path> paths = new ArrayList<Path>();
-            }
+
+
+//            }
+
+
             return true;
         }
     }
 
-    public static Bitmap mergeBitmap(Bitmap background, Bitmap foreground) {
+    public static Bitmap mergeBitmap(Bitmap background, Bitmap foreground,Paint paint) {
         if (background == null) {
             return null;
         }
@@ -428,7 +443,8 @@ public class DrawView extends View {
         int bgHeight = background.getHeight();
         Bitmap newMap = Bitmap.createBitmap(bgWidth, bgHeight, Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(newMap);
-        canvas.drawBitmap(background, 0, 0, null);
+        canvas.drawBitmap(background, 0, 0, paint);
+        canvas.drawBitmap(zoom(foreground,Constant.proportion),0,0,paint);
         return newMap;
     }
 
@@ -457,7 +473,7 @@ public class DrawView extends View {
                 mCanvas.drawPath(mPath, mPaint);
                 Path path = new Path();
                 path.set(mPath);
-                PathCollection.get(tmap.get(paintColor)).add(path);
+                PathCollection.get(tmap.get(mPaint.getColor())).add(path);
                 pathList.put(path, mPaint.getColor());
                 break;
             case ERASER:

@@ -24,7 +24,7 @@
 
         <activity android:name=".DrawActivity" />
 
-        <activity android:name=".FileSelect" />
+        <activity android:name=".FileSelectActivity" />
 
     </application>
 

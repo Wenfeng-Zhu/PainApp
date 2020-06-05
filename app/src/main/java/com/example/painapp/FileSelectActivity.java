@@ -1,12 +1,8 @@
 package com.example.painapp;
 
-import android.app.ListActivity;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
-import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
@@ -14,7 +10,6 @@ import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.io.File;
@@ -24,7 +19,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class FileSelect extends AppCompatActivity {
+public class FileSelectActivity extends AppCompatActivity {
 
     ListView listview;
     TextView textView;
@@ -57,7 +52,7 @@ public class FileSelect extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if (currentFiles[position].isFile()) {
                     //Intent intent = OpenFile.openFile(currentFiles[position].getPath());
-                    Intent intent = new Intent(FileSelect.this, MainActivity.class);
+                    Intent intent = new Intent(FileSelectActivity.this, MainActivity.class);
                     String filePath = currentFiles[position].getPath();
                     //Bundle bundle = new Bundle();
 
@@ -69,7 +64,7 @@ public class FileSelect extends AppCompatActivity {
                         finish();
                     }
                     else {
-                        Toast.makeText(FileSelect.this, "Please select a json file!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(FileSelectActivity.this, "Please select a json file!", Toast.LENGTH_SHORT).show();
                     }
 
                     //startActivity(intent);
@@ -77,7 +72,7 @@ public class FileSelect extends AppCompatActivity {
                     //获取currentFiles[position]路径下的所有文件
                     File[] tmp = currentFiles[position].listFiles();
                     if (tmp == null || tmp.length == 0) {
-                        Toast.makeText(FileSelect.this, "empty!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(FileSelectActivity.this, "empty!", Toast.LENGTH_SHORT).show();
                     }//if
                     else {
                         //获取用户单击的列表项对应的文件夹，设为当前的父文件夹
@@ -93,7 +88,7 @@ public class FileSelect extends AppCompatActivity {
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(FileSelect.this, MainActivity.class);
+                Intent intent = new Intent(FileSelectActivity.this, MainActivity.class);
                 startActivity(intent);
             }//onClick
         });
@@ -137,7 +132,7 @@ public class FileSelect extends AppCompatActivity {
     //更新列表
     private void inflateListView(File[] files) {
         if (files.length == 0)
-            Toast.makeText(FileSelect.this, "Folder is empty", Toast.LENGTH_SHORT).show();
+            Toast.makeText(FileSelectActivity.this, "Folder is empty", Toast.LENGTH_SHORT).show();
         else {
             //创建一个List集合,List集合的元素是Map
             List<Map<String, Object>> listItems = new ArrayList<Map<String, Object>>();
@@ -165,7 +160,7 @@ public class FileSelect extends AppCompatActivity {
 
     //监听手机自带返回键
     public void onBackPressed() {
-        Intent intent = new Intent(FileSelect.this, MainActivity.class);
+        Intent intent = new Intent(FileSelectActivity.this, MainActivity.class);
         startActivity(intent);
 
     }
