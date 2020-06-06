@@ -52,7 +52,7 @@ public class MyAdapter extends BaseAdapter {
         ViewHolder holder;
 
         if (convertView == null) {
-            convertView = mInflater.inflate(R.layout.activity_file_row, null);
+            convertView = mInflater.inflate(R.layout.files_list, null);
             holder = new ViewHolder();
             holder.text = (TextView) convertView.findViewById(R.id.text);
             holder.icon = (ImageView) convertView.findViewById(R.id.icon);

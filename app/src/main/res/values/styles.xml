@@ -22,4 +22,14 @@
     <style name="PopWindowAnimStyle">
     </style>
 
+    <declare-styleable name="ColorPickerView">
+        <attr name="enableAlpha" format="boolean"/>
+        <attr name="enableBrightness" format="boolean"/>
+        <attr name="updateOnEventUp" format="boolean"/>
+
+    </declare-styleable>
+
+
+
+
 </resources>

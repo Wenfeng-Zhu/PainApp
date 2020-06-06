@@ -26,6 +26,8 @@
 
         <activity android:name=".FileSelectActivity" />
 
+        <activity android:name=".ColorPickerActivity"/>
+
     </application>
 
 </manifest>

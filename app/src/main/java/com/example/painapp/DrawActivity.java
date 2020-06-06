@@ -2,7 +2,6 @@ package com.example.painapp;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.graphics.Path;
 import android.os.Bundle;
 import android.view.Gravity;
@@ -16,7 +15,6 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -24,7 +22,7 @@ import java.util.Map;
 public class DrawActivity extends AppCompatActivity {
 
 
-    private float proportion = Constant.proportion;
+    private float proportion = Container.proportion;
     private int Pen = 1;
     private int Eraser = 2;
     Context context = this;
@@ -41,7 +39,7 @@ public class DrawActivity extends AppCompatActivity {
 
 
         init();
-        dialogUtils.showCompleteDialog(this, "You need to know before painting");
+        dialogUtils.tipsDialog(this, "You need to know before painting");
 
 
     }
@@ -151,22 +149,14 @@ public class DrawActivity extends AppCompatActivity {
                         //view.setUndo(true);
                         view.invalidate();
                     }
-
                 }
                 else {
                     Toast toast = Toast.makeText(context, "There is nothing to undo ~ (×_×) ~", Toast.LENGTH_SHORT);
                     toast.setGravity(Gravity.CENTER,0,0);
                     toast.show();
                 }
-
-
-
             }
         });
-
-
-
-
 
         Button button_eraser = (Button) findViewById(R.id.button_eraser);
         button_eraser.setOnClickListener(new Button.OnClickListener() {
@@ -187,10 +177,6 @@ public class DrawActivity extends AppCompatActivity {
         view.invalidate();
         layout.addView(view);
 
-
-
-
-
         Button button_save = (Button) findViewById(R.id.save);
         button_save.setOnClickListener(new Button.OnClickListener() {
             @Override
@@ -205,8 +191,6 @@ public class DrawActivity extends AppCompatActivity {
                     toast.setGravity(Gravity.CENTER,0,0);
                     toast.show();
                 }
-                //System.out.println("按钮功能测试——1！！！！！！");
-
 
             }
         });
@@ -215,7 +199,7 @@ public class DrawActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(DrawActivity.this, MainActivity.class);
                 startActivity(intent);
-                Constant.ifImport = false;
+                Container.ifImport = false;
             }
         });
 

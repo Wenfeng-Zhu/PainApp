@@ -13,6 +13,8 @@ import android.widget.TextView;
 import androidx.annotation.RequiresApi;
 
 
+
+
 public class MainActivity extends Activity {
     public static final int FILE_RESULT_CODE = 1;
     public static final int RESULT_OK = 1;
@@ -26,7 +28,16 @@ public class MainActivity extends Activity {
         DisplayMetrics dm = getResources().getDisplayMetrics();
         int screenWidth = dm.widthPixels;
         int screenHeight = dm.heightPixels;
-        Constant.proportion = (float) (screenWidth)/(float) (827);
+        Container.proportion = (float) (screenWidth)/(float) (827);
+
+        Button button_pick = (Button)findViewById(R.id.to_picker);
+        button_pick.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ColorPickerActivity colorPickerActivity = new ColorPickerActivity(context);
+                colorPickerActivity.show();
+            }
+        });
 
 
         //Button pointing to Draw Page
@@ -72,7 +83,7 @@ public class MainActivity extends Activity {
         super.onActivityResult(requestCode, resultCode, data);
         //Get data from the new interface
         String filePath = data.getStringExtra("filePath");
-        Constant.filePath = filePath;
+        Container.filePath = filePath;
         if (RESULT_OK == resultCode) {
             //Bundle bundle = null;
             if (data != null && (data.getExtras()) != null) {
@@ -82,9 +93,9 @@ public class MainActivity extends Activity {
                 //Determine the corresponding color according to the second half of the path string
                 String str = filePath;
 
-                Constant.fileName = str.substring(filePath.lastIndexOf("_")+1,filePath.length()-5);
+                Container.fileName = str.substring(filePath.lastIndexOf("_")+1,filePath.length()-5);
 
-                Constant.ifImport = true;
+                Container.ifImport = true;
             }
         }
     }

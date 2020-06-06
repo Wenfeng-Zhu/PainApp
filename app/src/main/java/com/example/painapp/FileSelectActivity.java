@@ -94,40 +94,6 @@ public class FileSelectActivity extends AppCompatActivity {
         });
     }
 
-    //返回上层菜单
-//    private void onbey() {
-//        try {
-//            if (!"/data/user/0/com.example.painapp/files".equals(currentParent.getCanonicalPath())) {
-//                //获取上一层目录
-//                currentParent = currentParent.getParentFile();
-//                //列出当前目录下的所有文件
-//                currentFiles = currentParent.listFiles();
-//                //再次更新ListView
-//                inflateListView(currentFiles);
-//            }
-//            else{
-//                new AlertDialog.Builder(this)
-//                        .setIcon(R.mipmap.ic_launcher)
-//                        .setTitle("PROMPT")
-//                        .setMessage("Determine the file you selected.")
-//                        .setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
-//                            @Override
-//                            public void onClick(DialogInterface dialog, int which) {
-//                                finish();
-//                            }
-//                        })
-//                        .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-//                            @Override
-//                            public void onClick(DialogInterface dialog, int which) {
-//                            }
-//                        })
-//                        .create()
-//                        .show();
-//            }
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }//catch
-//    }
 
     //更新列表
     private void inflateListView(File[] files) {
@@ -147,7 +113,7 @@ public class FileSelectActivity extends AppCompatActivity {
                 listItems.add(listItem);
             }//for
             //创建一个SimpleAdapter
-            SimpleAdapter simpleAdapter = new SimpleAdapter(this, listItems, R.layout.activity_file_row, new String[]{"icon", "fileName"}, new int[]{R.id.icon, R.id.filename});
+            SimpleAdapter simpleAdapter = new SimpleAdapter(this, listItems, R.layout.files_list, new String[]{"icon", "fileName"}, new int[]{R.id.icon, R.id.filename});
             //位ListView设置Adpter
             listview.setAdapter(simpleAdapter);
             try {

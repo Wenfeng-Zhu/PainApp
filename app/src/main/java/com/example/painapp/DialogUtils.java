@@ -3,8 +3,10 @@ package com.example.painapp;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.os.Build;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
@@ -16,7 +18,6 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -24,31 +25,28 @@ import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
 
+import java.util.Locale;
 import java.util.Map;
 
 public class DialogUtils {
-    private static TextView tipTextView;
-    private static Dialog tipsDialog;
-    private static Dialog passwordDialog;
-    private static Dialog saveDialog;
-    private static ImageView tipsImageView;
-    public boolean add_correct = false;
-    public boolean save_correct = false;
+
+
+
     private Toast toast;
-    private String typename;
-    private String patientid;
+
     private final static String correct = "zhu";
+    private static String chooseColor;
+    private static int color;
+    private ColorPickerActivity colorPickerActivity;
 
-
-    public void showCompleteDialog(Context context, String msg){
+    protected void tipsDialog(Context context, String msg){
 
         LayoutInflater inflater = LayoutInflater.from(context);
         View v = inflater.inflate(R.layout.dialog_tips,null );// 得到加载view
-        tipTextView = v.findViewById(R.id.tips_textview);// 提示文字
+        TextView tipTextView = v.findViewById(R.id.tips_textview);// 提示文字
         tipTextView.setText(msg);// 设置加载信息
-        //tipsImageView = v.findViewById(R.id.tips_image);
-        //tipsImageView.setBackgroundResource(R.drawable.popup_image);
-        tipsDialog = new Dialog(context, R.style.MyDialogStyle);// 创建自定义样式dialog
+
+         Dialog tipsDialog = new Dialog(context, R.style.MyDialogStyle);// 创建自定义样式dialog
         tipsDialog.setContentView(R.layout.dialog_tips);
         tipsDialog.setCancelable(true); // 是否可以按“返回键”消失
         tipsDialog.setCanceledOnTouchOutside(true); // 点击加载框以外的区域
@@ -56,9 +54,7 @@ public class DialogUtils {
         tipsDialog.setContentView(v, new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.MATCH_PARENT));// 设置布局
-        /**
-         *将显示Dialog的方法封装在这里面
-         */
+
         Window window = tipsDialog.getWindow();
         WindowManager.LayoutParams lp = window.getAttributes();
         //lp.gravity = Gravity.CENTER;
@@ -68,13 +64,15 @@ public class DialogUtils {
         tipsDialog.show();
     }
 
-    public void savePasswordDialog(final Context context, final Map<String, Bitmap> map, final float proportion, final String filePath){
+    protected void savePasswordDialog(final Context context, final Map<String, Bitmap> map, final float proportion, final String filePath){
+
+
         final RWList RWList = new RWList();
 
         LayoutInflater inflater = LayoutInflater.from(context);
         View v = inflater.inflate(R.layout.dialog_password_save,null );
 
-        saveDialog = new Dialog(context, R.style.MyDialogStyle);// 创建自定义样式dialog
+        final Dialog saveDialog = new Dialog(context, R.style.MyDialogStyle);// 创建自定义样式dialog
         saveDialog.setContentView(R.layout.dialog_password_save);
         saveDialog.setCancelable(false); // 是否可以按“返回键”消失
         saveDialog.setCanceledOnTouchOutside(false); // 点击加载框以外的区域
@@ -110,7 +108,6 @@ public class DialogUtils {
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                save_correct = true;
                 saveDialog.dismiss();
             }
         });
@@ -121,25 +118,22 @@ public class DialogUtils {
             public void onClick(View v) {
                 String string = password.getText().toString();
                 if (string.equals(correct) &&  !patientID.getText().toString().isEmpty()){
-                    patientid = patientID.getText().toString();
+
                     SaveJson saveJson = new SaveJson();
                     System.out.println("测试节点——————2————————");
 
-                    saveJson.exportJson(map,proportion,filePath,patientid);
+                    saveJson.exportJson(map,proportion,filePath,patientID.getText().toString());
                     saveDialog.dismiss();
                     toast = Toast.makeText(saveDialog.getContext(), "File saved successfully", Toast.LENGTH_SHORT);
                     toast.setGravity(Gravity.CENTER,0,0);
                     toast.show();
-                    save_correct = true;
                 }
                 else if (string.isEmpty()){
-                    save_correct = false;
                     toast = Toast.makeText(saveDialog.getContext(), "Patient ID cannot be empty!", Toast.LENGTH_SHORT);
                     toast.setGravity(Gravity.CENTER,0,0);
                     toast.show();
                 }
                 else if (!string.equals(correct)){
-                    save_correct = false;
                     toast = Toast.makeText(saveDialog.getContext(), "Wrong Password!", Toast.LENGTH_SHORT);
                     toast.setGravity(Gravity.CENTER,0,0);
                     toast.show();
@@ -149,28 +143,29 @@ public class DialogUtils {
         });
     }
 
-    public void passwordDialog(final Context context){
+    protected void addPasswordDialog(final Context context){
+
         final RWList RWList = new RWList();
 
         LayoutInflater inflater = LayoutInflater.from(context);
-        View v = inflater.inflate(R.layout.dialog_password,null );
+        final View v = inflater.inflate(R.layout.dialog_password_add,null );
 
-        passwordDialog = new Dialog(context, R.style.MyDialogStyle);// 创建自定义样式dialog
-        passwordDialog.setContentView(R.layout.dialog_password);
-        passwordDialog.setCancelable(false); // 是否可以按“返回键”消失
-        passwordDialog.setCanceledOnTouchOutside(false); // 点击加载框以外的区域
+        final Dialog addDialog = new Dialog(context, R.style.MyDialogStyle);// 创建自定义样式dialog
+        addDialog.setContentView(R.layout.dialog_password_add);
+        addDialog.setCancelable(false); // 是否可以按“返回键”消失
+        addDialog.setCanceledOnTouchOutside(false); // 点击加载框以外的区域
 
-        passwordDialog.setContentView(v, new LinearLayout.LayoutParams(
+        addDialog.setContentView(v, new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.MATCH_PARENT));// 设置布局
 
-        Window window = passwordDialog.getWindow();
+        Window window = addDialog.getWindow();
         WindowManager.LayoutParams lp = window.getAttributes();
         //lp.gravity = Gravity.CENTER;
         window.setGravity(Gravity.CENTER_HORIZONTAL);
         window.setAttributes(lp);
         window.setWindowAnimations(R.style.AppTheme);
-        passwordDialog.show();
+        addDialog.show();
 
 
         final EditText typeName = v.findViewById(R.id.typeName);
@@ -192,8 +187,7 @@ public class DialogUtils {
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                add_correct = true;
-                passwordDialog.dismiss();
+                addDialog.dismiss();
             }
         });
         final Button confirm = v.findViewById(R.id.password_confirm);
@@ -203,13 +197,11 @@ public class DialogUtils {
             public void onClick(View v) {
                 String string = password.getText().toString();
                 if (string.equals(correct) && !typeName.getText().toString().isEmpty()){
-                    typename = typeName.getText().toString();
 
-                    RWList.writeList(context,typename,"typeList");
-
-                    add_correct = true;
-                    passwordDialog.dismiss();
-                    toast = Toast.makeText(passwordDialog.getContext(), "Add Successfully!", Toast.LENGTH_SHORT);
+                    RWList.writeList(context,typeName.getText().toString(),"typeList.txt");
+                    RWList.writeList(context,chooseColor,"colorList.txt");
+                    addDialog.dismiss();
+                    toast = Toast.makeText(addDialog.getContext(), "Add Successfully!", Toast.LENGTH_SHORT);
                     toast.setGravity(Gravity.CENTER,0,0);
                     toast.show();
                     Intent intent = new Intent(context,PainTypeActivity.class);
@@ -219,19 +211,55 @@ public class DialogUtils {
 
                 }
                 else if (typeName.getText().toString().isEmpty()){
-                    add_correct = false;
-                    toast = Toast.makeText(passwordDialog.getContext(), "Type Name cannot be empty!", Toast.LENGTH_SHORT);
+                    toast = Toast.makeText(addDialog.getContext(), "Type Name cannot be empty!", Toast.LENGTH_SHORT);
                     toast.setGravity(Gravity.CENTER,0,0);
                     toast.show();
                 }
                 else if (!string.equals(correct)){
-                    add_correct = false;
-                    toast = Toast.makeText(passwordDialog.getContext(), "Wrong Password!", Toast.LENGTH_SHORT);
+                    toast = Toast.makeText(addDialog.getContext(), "Wrong Password!", Toast.LENGTH_SHORT);
                     toast.setGravity(Gravity.CENTER,0,0);
                     toast.show();
                 }
 
             }
         });
+        Button displaycolor = (Button)v.findViewById(R.id.color);
+
+        Button colorHex = (Button)v.findViewById(R.id.colorHex);
+        colorPickerActivity = new ColorPickerActivity(context);
+        colorHex.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                colorPickerActivity.show();
+                LayoutInflater inflater = LayoutInflater.from(context);
+                Button button = colorPickerActivity.getClose();
+                button.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        colorPickerActivity.dismiss();
+                        chooseColor = colorHex(colorPickerActivity.getColor());
+                        color = colorPickerActivity.getColor();
+                    }
+                });
+            }
+        });
+        colorPickerActivity.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+                colorHex.setText(chooseColor);
+                displaycolor.setBackgroundColor(color);
+            }
+        });
     }
+
+    private String colorHex(int color){
+        int a = Color.alpha(color);
+        int r = Color.red(color);
+        int g = Color.green(color);
+        int b = Color.blue(color);
+        return String.format(Locale.getDefault(), "#%02X%02X%02X%02X", a, r, g, b);
+
+    }
+
+
 }

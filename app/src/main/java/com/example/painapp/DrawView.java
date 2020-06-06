@@ -9,10 +9,8 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
-import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -23,7 +21,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.Deque;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -71,7 +68,7 @@ public class DrawView extends View {
     public static final int ERASER = 2;
     private static final float TOUCH_TOLERANCE = 4;
 
-    private float proportion = Constant.proportion;
+    private float proportion = Container.proportion;
 
     private ArrayList<Bitmap> arrayList = new ArrayList<Bitmap>();
 
@@ -85,15 +82,12 @@ public class DrawView extends View {
 
     private Map<String, Integer> map = new HashMap<String, Integer>();
 
-    //private Bitmap nullBitmap = Bitmap.createBitmap(Math.round(827 * proportion), Math.round(1169 * proportion), Bitmap.Config.ARGB_8888);
 
     public DrawView(Context context) {
         super(context);
         this.context = context;
 
         sbMap = new HashMap<String, Bitmap>();
-//        saveBitmap = Bitmap.createBitmap(Math.round(827 * proportion), Math.round(1169 * proportion), Bitmap.Config.ARGB_8888);
-//        saveCanvas = new Canvas(saveBitmap);
 
         this.importBackGround();
         Undo = false;
@@ -115,7 +109,7 @@ public class DrawView extends View {
         hBitmapPaint = new Paint(Paint.DITHER_FLAG);
         hBitmapPaint.setColor(Color.BLACK);
         cBitmapPaint = new Paint(Paint.DITHER_FLAG);
-        cBitmapPaint.setColor(Constant.color);
+        cBitmapPaint.setColor(Container.color);
 
         mPaint = new Paint();
         mPaint.setColor(paintColor);
@@ -185,14 +179,6 @@ public class DrawView extends View {
         this.Mod = mod;
     }
 
-//    public ArrayList<Bitmap> getArrayList() {
-//        return arrayList;
-//    }
-//
-//    public void setArrayList(ArrayList<Bitmap> arrayList) {
-//        this.arrayList = arrayList;
-//    }
-
 
     public Map<String, Integer> getMap() {
         return map;
@@ -255,9 +241,9 @@ public class DrawView extends View {
 
     protected void importImage() {
 
-        if (Constant.ifImport) {
+        if (Container.ifImport) {
             try {
-                InputStream is_import = new FileInputStream(Constant.filePath);
+                InputStream is_import = new FileInputStream(Container.filePath);
                 InputStreamReader isr_import = new InputStreamReader(is_import, "UTF-8");
                 BufferedReader br_import = new BufferedReader(isr_import);
                 String str_import = "";
@@ -284,7 +270,7 @@ public class DrawView extends View {
 
             for (int i = 0; i < x_array_import.length; i++) {
                 //System.out.println("颜色赋值测试————————————" + Constant.color);
-                cBitmap.setPixel(x_array_import[i], 1169 - y_array_import[i], Constant.color);
+                cBitmap.setPixel(x_array_import[i], 1169 - y_array_import[i], Container.color);
             }
         }
 
@@ -321,11 +307,17 @@ public class DrawView extends View {
         this.pressed = pressed;
     }
 
+
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-
         canvas.drawBitmap(zoom(hBitmap, proportion), 0, 0, hBitmapPaint);
-        if (Constant.ifImport) {
+
+
+
+
+
+
+        if (Container.ifImport) {
             canvas.drawBitmap(zoom(cBitmap, proportion), 0, 0, cBitmapPaint);
             //canvas.drawBitmap(mBitmap,0,0,mBitmapPaint);
             invalidate();
@@ -411,8 +403,8 @@ public class DrawView extends View {
                                 saveCanvas.drawPath(path1, mEraserPaint);
                                 path1.reset();
                             }
-                            System.out.println("疼痛类型打印————————————"+Constant.fileName);
-                            if (string.equals(Constant.fileName)) {
+                            System.out.println("疼痛类型打印————————————"+ Container.fileName);
+                            if (string.equals(Container.fileName)) {
                                 System.out.println("啊圣诞节复活节快速导航范德萨积分");
                                 Bitmap bitmap = mergeBitmap(saveBitmap, cBitmap,mPaint).copy(Bitmap.Config.ARGB_8888,true);
                                 sbMap.put(string, bitmap);
@@ -444,7 +436,7 @@ public class DrawView extends View {
         Bitmap newMap = Bitmap.createBitmap(bgWidth, bgHeight, Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(newMap);
         canvas.drawBitmap(background, 0, 0, paint);
-        canvas.drawBitmap(zoom(foreground,Constant.proportion),0,0,paint);
+        canvas.drawBitmap(zoom(foreground, Container.proportion),0,0,paint);
         return newMap;
     }
 

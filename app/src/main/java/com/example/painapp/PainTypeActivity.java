@@ -17,13 +17,10 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.ColorLong;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.res.ResourcesCompat;
 
 import java.io.Serializable;
-import java.sql.SQLOutput;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -37,24 +34,12 @@ public class PainTypeActivity extends AppCompatActivity {
     private Spinner spinner_1 = null;
     private Spinner spinner_2 = null;
     private ArrayAdapter<String> arrayAdapter = null;
-
-    private String[] painType = null;
     private ArrayList<String> typeList= new ArrayList<String>();
-    //private int num = 2;
     private Handler handler = new Handler();
-
-    //private int typenum = 2;
     private ArrayList<String> typeListFinal = new ArrayList<String>();
     private ArrayList<Spinner> spinners = new ArrayList<Spinner>();
     private ArrayList<String> colors = new ArrayList<String>();
-
     private Map<String,Integer> map = new HashMap<String, Integer>();
-
-    //private ArrayList<String> spinnerNames = new ArrayList<String>();
-    //private ArrayList<String> buttonNames = new ArrayList<String>();
-    //private String[] spinnerNames = {"spinner_3","spinner_4","spinner_5","spinner_6","spinner_7","spinner_8"};
-    //private String[] buttonNames = {"button_3","button_4","button_5","button_6","button_7","button_8"};
-
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     protected void onCreate(Bundle saveInstanceState) {
@@ -71,14 +56,9 @@ public class PainTypeActivity extends AppCompatActivity {
             String color = colors.get(i);
             map.put(typeList.get(i),Color.parseColor(color));
         }
-        if(Constant.ifImport){
-            System.out.println("导入文件名测试——————————"+Constant.fileName);
-            Constant.color = map.get(Constant.fileName);
-            System.out.println("导入文件颜色测试————————"+Constant.color);
+        if(Container.ifImport){
+            Container.color = map.get(Container.fileName);
         }
-
-
-
 
         arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, typeList);
         arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -129,28 +109,9 @@ public class PainTypeActivity extends AppCompatActivity {
         button_newType.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                dialogUtils.passwordDialog(context);
-                //finish();
-//                if (dialogUtils.correctOfPassword){
-//
-//                    typeList.writeList(context,dialogUtils.typename);
-//                    Toast.makeText(PainTypeActivity.this, "Add Successfully!", Toast.LENGTH_SHORT).show();
-//
-//
-//
-//                }
-
+                dialogUtils.addPasswordDialog(context);
             }
         });
-//        if (dialogUtils.state){
-//            System.out.println("森林的砍伐韩国进口粮食的护法国会");
-//            Intent intent = new Intent(PainTypeActivity.this,PainTypeActivity.class);
-//            startActivity(intent);
-//            PainTypeActivity.this.finish();
-//            dialogUtils.state = false;
-//        }
-
-
 
         Button button_next = (Button)findViewById(R.id.button_next);
         button_next.setOnClickListener(new Button.OnClickListener() {
@@ -184,13 +145,7 @@ public class PainTypeActivity extends AppCompatActivity {
 
             }
         });
-
-
-
     }
-
-
-
     protected void addItem(){
         final LinearLayout linearLayout = new LinearLayout(context);
         Spinner spinner = new Spinner(context);
@@ -247,34 +202,6 @@ public class PainTypeActivity extends AppCompatActivity {
     protected void setButtonColor(Button button, String string) {
         int num = map.get(string);
         button.setBackgroundColor(num);
-
-
-
-
-
-//        for (int i = 0;i<itemList.size();i+=2){
-//
-//        }
-//        switch (string) {
-//            case "DRUCK":
-//                button.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.button_3, null));
-//                break;
-//            case "BOHREND":
-//                button.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.button_1, null));
-//                break;
-//            case "BRENNEN":
-//                button.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.button_2, null));
-//                break;
-//            case "DUMPF":
-//                button.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.button_4, null));
-//                break;
-//            case "KOLIK":
-//                button.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.button_5, null));
-//                break;
-//            case "STECHEND":
-//                button.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.button_1, null));
-//                break;
-//        }
 
     }
 
