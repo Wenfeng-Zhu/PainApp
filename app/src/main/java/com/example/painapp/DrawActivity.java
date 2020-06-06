@@ -1,7 +1,9 @@
 package com.example.painapp;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.Path;
 import android.os.Bundle;
 import android.view.Gravity;
@@ -27,7 +29,7 @@ public class DrawActivity extends AppCompatActivity {
     private int Eraser = 2;
     Context context = this;
     private Path lastPath;
-    private  Map<String,Integer> map;
+    private Map<String, Integer> map;
 
 
     @Override
@@ -43,18 +45,19 @@ public class DrawActivity extends AppCompatActivity {
 
 
     }
-    protected void addItem(ArrayList<Button> buttonList){
 
-        LinearLayout buttonsArea = (LinearLayout)findViewById(R.id.buttonsArea);
+    protected void addItem(ArrayList<Button> buttonList) {
 
-        LinearLayout.LayoutParams params_0 = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.WRAP_CONTENT);
+        LinearLayout buttonsArea = (LinearLayout) findViewById(R.id.buttonsArea);
+
+        LinearLayout.LayoutParams params_0 = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
 
         final LinearLayout linearLayout = new LinearLayout(this);
         linearLayout.setOrientation(LinearLayout.HORIZONTAL);
         linearLayout.setWeightSum(3);
         linearLayout.setLayoutParams(params_0);
 
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(getResources().getDimensionPixelSize(R.dimen.buttonWidth),LinearLayout.LayoutParams.WRAP_CONTENT,1.0f);
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(getResources().getDimensionPixelSize(R.dimen.buttonWidth), LinearLayout.LayoutParams.WRAP_CONTENT, 1.0f);
 
         final Button bt1 = new Button(this);
         bt1.setLayoutParams(params);
@@ -73,9 +76,10 @@ public class DrawActivity extends AppCompatActivity {
 
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     private void init() {
 
-        ScrollView scrollView = (ScrollView)findViewById(R.id.drawArea);
+        ScrollView scrollView = (ScrollView) findViewById(R.id.drawArea);
 
         LinearLayout layout = (LinearLayout) findViewById(R.id.root);
         final DrawView view = new DrawView(this);
@@ -91,68 +95,85 @@ public class DrawActivity extends AppCompatActivity {
 
         ArrayList<Button> buttonList = new ArrayList<Button>();
         final int num = map.size();
-        double time = Math.ceil((double)num/3.0);
-        for (int i = 0;i < time; i++){
+        double time = Math.ceil((double) num / 3.0);
+        for (int i = 0; i < time; i++) {
             addItem(buttonList);
         }
         int k = 0;
-        for (final Map.Entry<String,Integer> map1:map.entrySet()){
-            if(k == 0){
+        for (final Map.Entry<String, Integer> map1 : map.entrySet()) {
+            if (k == 0) {
                 view.setPaintColor(map1.getValue());
             }
             buttonList.get(k).setText(map1.getKey());
             buttonList.get(k).setBackgroundColor(map1.getValue());
-            buttonList.get(k).setOnClickListener(new View.OnClickListener() {
+//            buttonList.get(k).setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    view.setPaintColor(map1.getValue());
+//                    view.setMod(Pen);
+//                    view.pressed(true);
+//                    view.invalidate();
+//                }
+//            });
+            //
+            int finalK = k;
+            buttonList.get(k).setOnTouchListener(new View.OnTouchListener() {
                 @Override
-                public void onClick(View v) {
-                    view.setPaintColor(map1.getValue());
-                    view.setMod(Pen);
-                    view.pressed(true);
-                    view.invalidate();
+                public boolean onTouch(View v, MotionEvent event) {
+
+                    if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                        buttonList.get(finalK).setBackgroundColor(Color.parseColor("#FFADC1D4"));
+                        view.setPaintColor(map1.getValue());
+                        view.setMod(Pen);
+                        view.pressed(true);
+                        view.invalidate();
+                    }
+                    if (event.getAction() == MotionEvent.ACTION_UP) {
+                        buttonList.get(finalK).setBackgroundColor(map1.getValue());
+                    }
+                    return false;
                 }
             });
             k++;
         }
-        Button button_undo = (Button)findViewById(R.id.button_undo);
+        Button button_undo = (Button) findViewById(R.id.button_undo);
 
         button_undo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!view.getPathList().isEmpty()){
+                if (!view.getPathList().isEmpty()) {
 
-                    LinkedHashMap<Path,Integer> pathList = view.getPathList();
+                    LinkedHashMap<Path, Integer> pathList = view.getPathList();
                     //System.out.println("PathList非同测试"+(pathList.get(0)==pathList.get(1)));
                     Iterator<Path> iterator = pathList.keySet().iterator();
                     while (iterator.hasNext()) {
                         lastPath = iterator.next();
                     }
-                    if(pathList.get(lastPath)==view.getmEraserPaint().getColor()){
+                    if (pathList.get(lastPath) == view.getmEraserPaint().getColor()) {
                         Map<String, ArrayList<Path>> PathCollection = view.getPathCollection();
                         ArrayList<Path> paths = PathCollection.get("eraser");
-                        paths.remove(paths.size()-1);
-                        PathCollection.put("eraser",paths);
+                        paths.remove(paths.size() - 1);
+                        PathCollection.put("eraser", paths);
                         view.setPathCollection(PathCollection);
 
                         pathList.remove(lastPath);
                         view.setPathList(pathList);
                         //view.setUndo(true);
                         view.invalidate();
-                    }
-                    else {
+                    } else {
                         Map<String, ArrayList<Path>> PathCollection = view.getPathCollection();
                         ArrayList<Path> paths = PathCollection.get(view.getTmap().get(pathList.get(lastPath)));
-                        paths.remove(paths.size()-1);
-                        PathCollection.put(view.getTmap().get(pathList.get(lastPath)),paths);
+                        paths.remove(paths.size() - 1);
+                        PathCollection.put(view.getTmap().get(pathList.get(lastPath)), paths);
                         view.setPathCollection(PathCollection);
                         pathList.remove(lastPath);
                         view.setPathList(pathList);
                         //view.setUndo(true);
                         view.invalidate();
                     }
-                }
-                else {
+                } else {
                     Toast toast = Toast.makeText(context, "There is nothing to undo ~ (×_×) ~", Toast.LENGTH_SHORT);
-                    toast.setGravity(Gravity.CENTER,0,0);
+                    toast.setGravity(Gravity.CENTER, 0, 0);
                     toast.show();
                 }
             }
@@ -182,13 +203,12 @@ public class DrawActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                if (view.saveScreen()){
+                if (view.saveScreen()) {
                     DialogUtils saveDialog = new DialogUtils();
-                    saveDialog.savePasswordDialog(context,view.getSbMap(), proportion, view.getContext().getFilesDir().getAbsolutePath());
-                }
-                else {
+                    saveDialog.savePasswordDialog(context, view.getSbMap(), proportion, view.getContext().getFilesDir().getAbsolutePath());
+                } else {
                     Toast toast = Toast.makeText(context, "There is nothing to save ~ (×_×) ~", Toast.LENGTH_SHORT);
-                    toast.setGravity(Gravity.CENTER,0,0);
+                    toast.setGravity(Gravity.CENTER, 0, 0);
                     toast.show();
                 }
 
@@ -202,8 +222,6 @@ public class DrawActivity extends AppCompatActivity {
                 Container.ifImport = false;
             }
         });
-
-
 
 
     }

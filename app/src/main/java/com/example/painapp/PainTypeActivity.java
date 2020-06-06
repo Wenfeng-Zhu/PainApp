@@ -34,12 +34,19 @@ public class PainTypeActivity extends AppCompatActivity {
     private Spinner spinner_1 = null;
     private Spinner spinner_2 = null;
     private ArrayAdapter<String> arrayAdapter = null;
+
+    private String[] painType = null;
     private ArrayList<String> typeList= new ArrayList<String>();
+    //private int num = 2;
     private Handler handler = new Handler();
+
+
     private ArrayList<String> typeListFinal = new ArrayList<String>();
     private ArrayList<Spinner> spinners = new ArrayList<Spinner>();
     private ArrayList<String> colors = new ArrayList<String>();
+
     private Map<String,Integer> map = new HashMap<String, Integer>();
+
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     protected void onCreate(Bundle saveInstanceState) {
