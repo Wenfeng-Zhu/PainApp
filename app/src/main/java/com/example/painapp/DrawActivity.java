@@ -5,15 +5,23 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Path;
+import android.graphics.PointF;
+import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.GestureDetector;
 import android.view.Gravity;
 import android.view.MotionEvent;
+import android.view.ScaleGestureDetector;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.Toast;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.ArrayList;
@@ -22,8 +30,6 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class DrawActivity extends AppCompatActivity {
-
-
     private float proportion = Container.proportion;
     private int Pen = 1;
     private int Eraser = 2;
@@ -31,6 +37,7 @@ public class DrawActivity extends AppCompatActivity {
     private Path lastPath;
     private Map<String, Integer> map;
 
+    private ScaleGestureDetector mScaleGestureDetector = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,11 +45,8 @@ public class DrawActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_draw);
         DialogUtils dialogUtils = new DialogUtils();
-
-
         init();
         dialogUtils.tipsDialog(this, "You need to know before painting");
-
 
     }
 
@@ -76,21 +80,37 @@ public class DrawActivity extends AppCompatActivity {
 
     }
 
-    @SuppressLint("ClickableViewAccessibility")
+
+    private ScaleGestureBinder scaleGestureBinder;
+    private ScaleGestureListener scaleGestureListener;
+    private GestureViewBinder gestureViewBinder;
+    private ScrollGestureListener scrollGestureListener;
+    private GestureDetector gestureDetector;
+
+
     private void init() {
-
-        ScrollView scrollView = (ScrollView) findViewById(R.id.drawArea);
-
         LinearLayout layout = (LinearLayout) findViewById(R.id.root);
+        int height = layout.getHeight();
+
+//      ScrollView scrollView = (ScrollView) findViewById(R.id.drawArea);
+        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT);
+        params.addRule(RelativeLayout.CENTER_IN_PARENT, RelativeLayout.TRUE);
         final DrawView view = new DrawView(this);
-
-        view.setMinimumHeight(Math.round(1169 * proportion));
-        view.setMinimumWidth(Math.round(827 * proportion));
-
+//        view.setMinimumHeight(Math.round(1169 * proportion));
+//        view.setMinimumWidth(Math.round(827 * proportion));
+        view.setLayoutParams(params);
         //ArrayList<String> typeList = this.getIntent().getStringArrayListExtra("typeList");
         map = (Map<String, Integer>) this.getIntent().getSerializableExtra("map");
-
         view.setMap(map);
+        view.invalidate();
+        layout.addView(view,params);
+
+
+        scaleGestureBinder.bindView(this,view,layout);
+        gestureViewBinder = new GestureViewBinder(this,layout,view);
+
+        //scrollGestureListener = new ScrollGestureListener(view);
+        //gestureViewBinder = new GestureViewBinder(context,scrollGestureListener,layout,view);
 
 
         ArrayList<Button> buttonList = new ArrayList<Button>();
@@ -106,16 +126,7 @@ public class DrawActivity extends AppCompatActivity {
             }
             buttonList.get(k).setText(map1.getKey());
             buttonList.get(k).setBackgroundColor(map1.getValue());
-//            buttonList.get(k).setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    view.setPaintColor(map1.getValue());
-//                    view.setMod(Pen);
-//                    view.pressed(true);
-//                    view.invalidate();
-//                }
-//            });
-            //
+
             int finalK = k;
             buttonList.get(k).setOnTouchListener(new View.OnTouchListener() {
                 @Override
@@ -124,7 +135,7 @@ public class DrawActivity extends AppCompatActivity {
                     if (event.getAction() == MotionEvent.ACTION_DOWN) {
                         buttonList.get(finalK).setBackgroundColor(Color.parseColor("#FFADC1D4"));
                         view.setPaintColor(map1.getValue());
-                        view.setMod(Pen);
+                        view.setMode(Pen);
                         view.pressed(true);
                         view.invalidate();
                     }
@@ -136,8 +147,9 @@ public class DrawActivity extends AppCompatActivity {
             });
             k++;
         }
-        Button button_undo = (Button) findViewById(R.id.button_undo);
 
+
+        Button button_undo = (Button) findViewById(R.id.button_undo);
         button_undo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -183,8 +195,7 @@ public class DrawActivity extends AppCompatActivity {
         button_eraser.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View v) {
-                view.setMod(Eraser);
-
+                view.setMode(Eraser);
             }
         });
 
@@ -195,8 +206,7 @@ public class DrawActivity extends AppCompatActivity {
                 return false;
             }
         });
-        view.invalidate();
-        layout.addView(view);
+
 
         Button button_save = (Button) findViewById(R.id.save);
         button_save.setOnClickListener(new Button.OnClickListener() {
@@ -222,8 +232,7 @@ public class DrawActivity extends AppCompatActivity {
                 Container.ifImport = false;
             }
         });
-
-
     }
+
 
 }

@@ -11,6 +11,7 @@ import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -45,9 +46,6 @@ public class DrawView extends View {
     StringBuilder strb = new StringBuilder();
     StringBuilder strb_import = new StringBuilder();
 
-//    private Bitmap saveBitmap;
-//    private Canvas saveCanvas;
-
     private Bitmap mBitmap;
     private Bitmap hBitmap;
     private Bitmap cBitmap;
@@ -63,12 +61,30 @@ public class DrawView extends View {
 
     private boolean Undo;
 
-    private int Mod = 1;
+    private int Mode = 1;
     public static final int PEN = 1;
     public static final int ERASER = 2;
     private static final float TOUCH_TOLERANCE = 4;
 
+    public float getProportion() {
+        return proportion;
+    }
+
+    public void setProportion(float proportion) {
+        this.proportion = proportion;
+    }
+
     private float proportion = Container.proportion;
+
+    public float getZoom() {
+        return zoom;
+    }
+
+    public void setZoom(float zoom) {
+        this.zoom = zoom;
+    }
+
+    private float zoom = 1;
 
     private ArrayList<Bitmap> arrayList = new ArrayList<Bitmap>();
 
@@ -99,12 +115,13 @@ public class DrawView extends View {
 
         mEraserPaint = new Paint((Paint.DITHER_FLAG));
         mEraserPaint.setAlpha(0);
+        //mEraserPaint.setColor(Color.WHITE);
         mEraserPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.DST_IN));
         mEraserPaint.setAntiAlias(true);
         mEraserPaint.setDither(true);
         mEraserPaint.setStyle(Paint.Style.STROKE);
         mEraserPaint.setStrokeJoin(Paint.Join.ROUND);
-        mEraserPaint.setStrokeWidth(20);
+        mEraserPaint.setStrokeWidth(30);
 
         hBitmapPaint = new Paint(Paint.DITHER_FLAG);
         hBitmapPaint.setColor(Color.BLACK);
@@ -171,12 +188,12 @@ public class DrawView extends View {
         this.paintColor = paintColor;
     }
 
-    public int getMod() {
-        return Mod;
+    public int getMode() {
+        return Mode;
     }
 
-    public void setMod(int mod) {
-        this.Mod = mod;
+    public void setMode(int mode) {
+        this.Mode = mode;
     }
 
 
@@ -193,14 +210,6 @@ public class DrawView extends View {
         PathCollection.put("eraser", new ArrayList<Path>());
 
     }
-
-//    public boolean isUndo() {
-//        return Undo;
-//    }
-//
-//    public void setUndo(boolean undo) {
-//        Undo = undo;
-//    }
 
     protected void importBackGround() {
         try {
@@ -307,14 +316,9 @@ public class DrawView extends View {
         this.pressed = pressed;
     }
 
-
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         canvas.drawBitmap(zoom(hBitmap, proportion), 0, 0, hBitmapPaint);
-
-
-
-
 
 
         if (Container.ifImport) {
@@ -352,9 +356,10 @@ public class DrawView extends View {
 
 
         }
-        canvas.drawBitmap(mBitmap, 0, 0, mBitmapPaint);
+        canvas.drawBitmap(zoom(mBitmap, zoom), 0, 0, mBitmapPaint);
+        //zoom = 1;
 
-        switch (Mod) {
+        switch (Mode) {
             case PEN:
                 canvas.drawPath(mPath, mPaint);
                 break;
@@ -364,7 +369,6 @@ public class DrawView extends View {
         }
 
     }
-
 
     protected boolean saveScreen() {
 
@@ -382,42 +386,41 @@ public class DrawView extends View {
         } else {
 //            for (Canvas canvas : canvasBitmapMap.keySet()) {
 
-                for (String string : PathCollection.keySet()) {
-                    Canvas saveCanvas  = new Canvas(saveBitmap);
-                    if (PathCollection.get(string).isEmpty()) {
+            for (String string : PathCollection.keySet()) {
+                Canvas saveCanvas = new Canvas(saveBitmap);
+                if (PathCollection.get(string).isEmpty()) {
+
+                } else {
+                    if (string.equals("eraser")) {
 
                     } else {
-                        if (string.equals("eraser")) {
-
+                        mPaint.setColor(map.get(string));
+                        for (Path path : PathCollection.get(string)) {
+                            Path path1 = new Path();
+                            path1.set(path);
+                            saveCanvas.drawPath(path1, mPaint);
+                            path1.reset();
+                        }
+                        for (Path path : PathCollection.get("eraser")) {
+                            Path path1 = new Path();
+                            path1.set(path);
+                            saveCanvas.drawPath(path1, mEraserPaint);
+                            path1.reset();
+                        }
+                        System.out.println("疼痛类型打印————————————" + Container.fileName);
+                        if (string.equals(Container.fileName)) {
+                            Bitmap bitmap = mergeBitmap(saveBitmap, cBitmap, mPaint).copy(Bitmap.Config.ARGB_8888, true);
+                            sbMap.put(string, bitmap);
                         } else {
-                            mPaint.setColor(map.get(string));
-                            for (Path path : PathCollection.get(string)) {
-                                Path path1 = new Path();
-                                path1.set(path);
-                                saveCanvas.drawPath(path1, mPaint);
-                                path1.reset();
-                            }
-                            for (Path path : PathCollection.get("eraser")) {
-                                Path path1 = new Path();
-                                path1.set(path);
-                                saveCanvas.drawPath(path1, mEraserPaint);
-                                path1.reset();
-                            }
-                            System.out.println("疼痛类型打印————————————"+ Container.fileName);
-                            if (string.equals(Container.fileName)) {
-                                System.out.println("啊圣诞节复活节快速导航范德萨积分");
-                                Bitmap bitmap = mergeBitmap(saveBitmap, cBitmap,mPaint).copy(Bitmap.Config.ARGB_8888,true);
-                                sbMap.put(string, bitmap);
-                            } else {
-                                sbMap.put(string, saveBitmap.copy(Bitmap.Config.ARGB_8888, true));
-                                clear(saveCanvas);
-                            }
-
+                            sbMap.put(string, saveBitmap.copy(Bitmap.Config.ARGB_8888, true));
+                            clear(saveCanvas);
                         }
 
                     }
 
                 }
+
+            }
 
 
 //            }
@@ -427,7 +430,7 @@ public class DrawView extends View {
         }
     }
 
-    public static Bitmap mergeBitmap(Bitmap background, Bitmap foreground,Paint paint) {
+    public static Bitmap mergeBitmap(Bitmap background, Bitmap foreground, Paint paint) {
         if (background == null) {
             return null;
         }
@@ -436,16 +439,23 @@ public class DrawView extends View {
         Bitmap newMap = Bitmap.createBitmap(bgWidth, bgHeight, Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(newMap);
         canvas.drawBitmap(background, 0, 0, paint);
-        canvas.drawBitmap(zoom(foreground, Container.proportion),0,0,paint);
+        canvas.drawBitmap(zoom(foreground, Container.proportion), 0, 0, paint);
         return newMap;
     }
-
 
     private void touch_start(float x, float y) {
         mPath.reset();
         mPath.moveTo(x, y);
         mX = x;
         mY = y;
+        switch (Mode) {
+            case PEN:
+                mCanvas.drawPath(mPath, mPaint);
+                break;
+            case ERASER:
+                mCanvas.drawPath(mPath, mEraserPaint);
+                break;
+        }
     }
 
     private void touch_move(float x, float y) {
@@ -455,12 +465,21 @@ public class DrawView extends View {
             mPath.quadTo(mX, mY, (x + mX) / 2, (y + mY) / 2);
             mX = x;
             mY = y;
+            switch (Mode) {
+                case PEN:
+                    mCanvas.drawPath(mPath, mPaint);
+                    break;
+                case ERASER:
+                    mCanvas.drawPath(mPath, mEraserPaint);
+                    break;
+            }
         }
+
     }
 
     private void touch_up() {
         mPath.lineTo(mX, mY);
-        switch (Mod) {
+        switch (Mode) {
             case PEN:
                 mCanvas.drawPath(mPath, mPaint);
                 Path path = new Path();
@@ -479,37 +498,35 @@ public class DrawView extends View {
         mPath.reset();
     }
 
-    @Override
-    public boolean onTouchEvent(MotionEvent event) {
-        if (event.getAction() == MotionEvent.ACTION_MOVE) {
-            if (event.getPointerCount() == 2) {
-                getParent().requestDisallowInterceptTouchEvent(false);
-                //getParent().getParent().requestDisallowInterceptTouchEvent(false);
-            } else if (event.getPointerCount() == 1) {
-                getParent().requestDisallowInterceptTouchEvent(true);
-                //getParent().getParent().requestDisallowInterceptTouchEvent(true);
-            }
-        }
-
-        float x = (int) Math.ceil(event.getX());
-        float y = (int) Math.ceil(event.getY());
-
-        switch (event.getAction()) {
-            case MotionEvent.ACTION_DOWN:
-                touch_start(x, y);
-                invalidate();
-                break;
-            case MotionEvent.ACTION_MOVE:
-                touch_move(x, y);
-                invalidate();
-                break;
-            case MotionEvent.ACTION_UP:
-                touch_up();
-                invalidate();
-                break;
-        }
-        return true;
-    }
+//    @Override
+//    public boolean onTouchEvent(MotionEvent event) {
+//
+//
+//        //getParent().requestDisallowInterceptTouchEvent(true);
+//        float x = (int) Math.ceil(event.getX());
+//        float y = (int) Math.ceil(event.getY());
+//
+//        switch (event.getAction()) {
+//            case MotionEvent.ACTION_DOWN:
+//                touch_start(x, y);
+//                invalidate();
+//                break;
+//            case MotionEvent.ACTION_MOVE:
+//                if (event.getPointerCount() !=1) {
+//                    getParent().requestDisallowInterceptTouchEvent(false);
+//                    return false;
+//                }
+//                touch_move(x, y);
+//                invalidate();
+//                break;
+//            case MotionEvent.ACTION_UP:
+//                touch_up();
+//                invalidate();
+//                break;
+//        }
+//        return true;
+//
+//    }
 
 
 }

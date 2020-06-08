@@ -28,14 +28,14 @@ public class MainActivity extends Activity {
         DisplayMetrics dm = getResources().getDisplayMetrics();
         int screenWidth = dm.widthPixels;
         int screenHeight = dm.heightPixels;
-        Container.proportion = (float) (screenWidth)/(float) (827);
+        Container.proportion = (float) (screenWidth*0.8)/(float) (827);
 
         Button button_pick = (Button)findViewById(R.id.to_picker);
         button_pick.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ColorPickerActivity colorPickerActivity = new ColorPickerActivity(context);
-                colorPickerActivity.show();
+                Intent intent = new Intent(MainActivity.this, TestActivity.class);
+                startActivity(intent);
             }
         });
 
