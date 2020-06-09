@@ -8,6 +8,7 @@ import android.graphics.Path;
 import android.graphics.PointF;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.Gravity;
@@ -106,7 +107,9 @@ public class DrawActivity extends AppCompatActivity {
         layout.addView(view,params);
 
 
-        scaleGestureBinder.bindView(this,view,layout);
+
+
+        //scaleGestureBinder.bindView(this,view,layout);
         gestureViewBinder = new GestureViewBinder(this,layout,view);
 
         //scrollGestureListener = new ScrollGestureListener(view);
@@ -138,6 +141,7 @@ public class DrawActivity extends AppCompatActivity {
                         view.setMode(Pen);
                         view.pressed(true);
                         view.invalidate();
+                        Container.move_action = true;
                     }
                     if (event.getAction() == MotionEvent.ACTION_UP) {
                         buttonList.get(finalK).setBackgroundColor(map1.getValue());
@@ -147,6 +151,14 @@ public class DrawActivity extends AppCompatActivity {
             });
             k++;
         }
+        Button button_move = (Button)findViewById(R.id.button_move);
+        button_move.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                Container.move_action = false;
+                return false;
+            }
+        });
 
 
         Button button_undo = (Button) findViewById(R.id.button_undo);
@@ -215,7 +227,8 @@ public class DrawActivity extends AppCompatActivity {
 
                 if (view.saveScreen()) {
                     DialogUtils saveDialog = new DialogUtils();
-                    saveDialog.savePasswordDialog(context, view.getSbMap(), proportion, view.getContext().getFilesDir().getAbsolutePath());
+//                    saveDialog.savePasswordDialog(context, view.getSbMap(), proportion, view.getContext().getFilesDir().getAbsolutePath());
+                    saveDialog.savePasswordDialog(context, view.getSbMap(), proportion, getExternalFilesDir("").getAbsolutePath());
                 } else {
                     Toast toast = Toast.makeText(context, "There is nothing to save ~ (×_×) ~", Toast.LENGTH_SHORT);
                     toast.setGravity(Gravity.CENTER, 0, 0);

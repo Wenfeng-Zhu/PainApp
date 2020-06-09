@@ -8,6 +8,7 @@ public class Container {
     public static float proportion;
     public static String typecolor;
     public static boolean choose;
+    public static boolean move_action = true;
 
     static final int SELECTOR_RADIUS_DP = 9;
 }

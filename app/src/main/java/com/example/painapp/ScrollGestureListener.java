@@ -28,8 +28,10 @@ public class ScrollGestureListener extends GestureDetector.SimpleOnGestureListen
         distanceYTemp += distanceY;
         targetView.setTranslationX(distanceXTemp);
         targetView.setTranslationY(distanceYTemp);
-        return super.onScroll(e1, e2, distanceX, distanceY);
+//        return super.onScroll(e1, e2, distanceX, distanceY);
+        return false;
     }
+
 
     @Override
     public boolean onDown(MotionEvent e) {

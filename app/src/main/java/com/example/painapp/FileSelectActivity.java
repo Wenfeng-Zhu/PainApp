@@ -2,6 +2,7 @@ package com.example.painapp;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Environment;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -38,7 +39,8 @@ public class FileSelectActivity extends AppCompatActivity {
         listview = (ListView) findViewById(R.id.list);
         textView = (TextView) findViewById(R.id.mPath);
         //获取软件文件目录"/data/user/0/com.example.painapp/files"
-        File root = new File(this.getFilesDir().getAbsolutePath());
+//        File root = new File(this.getFilesDir().getAbsolutePath());
+        File root = new File(getExternalFilesDir("").getAbsolutePath());
         //如果路径存在
         if (root.exists()) {
             currentParent = root;

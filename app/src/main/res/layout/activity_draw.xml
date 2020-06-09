@@ -27,23 +27,6 @@
                 android:orientation="vertical" />
         </ScrollView>
 
-        <Button
-            android:id="@+id/button_eraser"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:text="Eraser" />
-
-        <LinearLayout
-            android:id="@+id/root"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_gravity="center_horizontal"
-            android:layout_weight="14"
-            android:orientation="vertical">
-
-        </LinearLayout>
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
@@ -51,18 +34,29 @@
             android:orientation="horizontal">
 
             <Button
-                android:id="@+id/zoom_in"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:id="@+id/button_move"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:text="ZOOM IN" />
+                android:text="move" />
 
             <Button
-                android:id="@+id/zoom_out"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:id="@+id/button_eraser"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:text="ZOOM OUT" />
+                android:text="Eraser" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/root"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_weight="15"
+            android:orientation="vertical">
+
         </LinearLayout>
 
         <Button

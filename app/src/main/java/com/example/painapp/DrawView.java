@@ -11,7 +11,6 @@ import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -28,7 +27,6 @@ import java.util.Map;
 
 public class DrawView extends View {
     private float mX, mY;
-
     public Map<String, Bitmap> getSbMap() {
         return sbMap;
     }
@@ -58,8 +56,6 @@ public class DrawView extends View {
     Context context;
     private Paint mPaint;
     private int paintColor = Color.BLACK;
-
-    private boolean Undo;
 
     private int Mode = 1;
     public static final int PEN = 1;
@@ -106,7 +102,6 @@ public class DrawView extends View {
         sbMap = new HashMap<String, Bitmap>();
 
         this.importBackGround();
-        Undo = false;
 
 
         mPath = new Path();
@@ -443,7 +438,7 @@ public class DrawView extends View {
         return newMap;
     }
 
-    private void touch_start(float x, float y) {
+    void touch_start(float x, float y) {
         mPath.reset();
         mPath.moveTo(x, y);
         mX = x;
@@ -458,7 +453,7 @@ public class DrawView extends View {
         }
     }
 
-    private void touch_move(float x, float y) {
+    void touch_move(float x, float y) {
         float dx = Math.abs(x - mX);
         float dy = Math.abs(y - mY);
         if (dx >= TOUCH_TOLERANCE || dy >= TOUCH_TOLERANCE) {
@@ -477,7 +472,7 @@ public class DrawView extends View {
 
     }
 
-    private void touch_up() {
+    void touch_up() {
         mPath.lineTo(mX, mY);
         switch (Mode) {
             case PEN:
@@ -498,35 +493,39 @@ public class DrawView extends View {
         mPath.reset();
     }
 
-//    @Override
-//    public boolean onTouchEvent(MotionEvent event) {
-//
-//
-//        //getParent().requestDisallowInterceptTouchEvent(true);
-//        float x = (int) Math.ceil(event.getX());
-//        float y = (int) Math.ceil(event.getY());
-//
-//        switch (event.getAction()) {
-//            case MotionEvent.ACTION_DOWN:
-//                touch_start(x, y);
-//                invalidate();
-//                break;
-//            case MotionEvent.ACTION_MOVE:
-//                if (event.getPointerCount() !=1) {
-//                    getParent().requestDisallowInterceptTouchEvent(false);
-//                    return false;
-//                }
-//                touch_move(x, y);
-//                invalidate();
-//                break;
-//            case MotionEvent.ACTION_UP:
-//                touch_up();
-//                invalidate();
-//                break;
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+//        if (event.getPointerCount() == 1){
+//            System.out.println("手指测试________________________");
+            //getParent().requestDisallowInterceptTouchEvent(true);
+            float x = (int) Math.ceil(event.getX());
+            float y = (int) Math.ceil(event.getY());
+
+            switch (event.getAction()) {
+                case MotionEvent.ACTION_DOWN:
+                    System.out.println("手指测试___down_____________________");
+                    touch_start(x, y);
+                    invalidate();
+                    break;
+                case MotionEvent.ACTION_MOVE:
+                    System.out.println("手指测试____move____________________");
+                    touch_move(x, y);
+                    invalidate();
+                    break;
+                case MotionEvent.ACTION_UP:
+                    System.out.println("手指测试____up____________________");
+                    touch_up();
+                    invalidate();
+
+                    break;
+            }
+//            return false;
 //        }
-//        return true;
-//
-//    }
+
+        return Container.move_action;
+
+
+    }
 
 
 }
