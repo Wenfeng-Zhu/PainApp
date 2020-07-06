@@ -29,7 +29,6 @@ public class SaveJson {
 
     public void exportJson(Map<String, Bitmap> map, float proportion, String filePath, String fileNum) {
 
-        //System.out.println("导入数据函数测试！！！！！！！");
         for (String string : map.keySet()) {
             String fileName = "Patient" + fileNum + "_" + string;
             for (int i = 0; i < Math.round(827 * proportion); i++) {
@@ -50,25 +49,25 @@ public class SaveJson {
     }
 
     public static boolean createJsonFile(ArrayList<Integer> array_all, String filePath, String fileName) {
-        // 标记文件生成是否成功
+
         boolean flag = true;
         String jsonString;
-        // 拼接文件完整路径
+
         String fullPath = filePath + File.separator + fileName + ".json";
-        // 生成json格式文件
+
         try {
-            // 保证创建一个新文件
+
             File file = new File(fullPath);
-            if (!file.getParentFile().exists()) { // 如果父目录不存在，创建父目录
+            if (!file.getParentFile().exists()) {
                 file.getParentFile().mkdirs();
             }
-            if (file.exists()) { // 如果已存在,删除旧文件
+            if (file.exists()) {
                 file.delete();
             }
             file.createNewFile();
-            // 格式化json字符串
+
             jsonString = SaveJson.formatJson(array_all);
-            // 将格式化后的字符串写入文件
+
             Writer write = new OutputStreamWriter(new FileOutputStream(file), "UTF-8");
 
             write.write(jsonString);
@@ -78,7 +77,7 @@ public class SaveJson {
             flag = false;
             e.printStackTrace();
         }
-        // 返回是否成功的标记
+
         return flag;
     }
 

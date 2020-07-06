@@ -38,16 +38,16 @@ public class TestActivity extends AppCompatActivity {
             public void run() {
 
                 mBitmap = Bitmap.createBitmap(100,100, Bitmap.Config.ARGB_8888);
-                // 锁定整个SurfaceView
+
                 Canvas mCanvas = mSurfaceHolder.lockCanvas();
-                // 画图
+
                 Paint hBitmapPaint = new Paint(Paint.DITHER_FLAG);
                 hBitmapPaint.setColor(Color.BLACK);
                 mCanvas.drawBitmap(mBitmap, 0f, 0f, null);
                 mCanvas.drawCircle(100,100,100,hBitmapPaint);
-                // 绘制完成，提交修改
+
                 mSurfaceHolder.unlockCanvasAndPost(mCanvas);
-                // 重新锁一次
+
                 mSurfaceHolder.lockCanvas(new Rect(0, 0, 0, 0));
                 mSurfaceHolder.unlockCanvasAndPost(mCanvas);
             }
@@ -64,7 +64,7 @@ public class TestActivity extends AppCompatActivity {
     public class ScaleGestureListener implements ScaleGestureDetector.OnScaleGestureListener {
 
         private float scale;
-        private float preScale = 1;// 默认前一次缩放比例为1
+        private float preScale = 1;
 
         @Override
         public boolean onScale(ScaleGestureDetector detector) {
@@ -74,27 +74,21 @@ public class TestActivity extends AppCompatActivity {
             float previousSpan = detector.getPreviousSpan();
             float currentSpan = detector.getCurrentSpan();
             if (currentSpan < previousSpan) {
-                // 缩小
-                System.out.println("缩小————————————————————");
-                // scale = preScale-detector.getScaleFactor()/3;
                 scale = preScale - (previousSpan - currentSpan) / 1000;
             } else {
-                // 放大
-                System.out.println("放大————————————————————");
-                // scale = preScale+detector.getScaleFactor()/3;
                 scale = preScale + (currentSpan - previousSpan) / 1000;
             }
             mMatrix.setScale(scale, scale);
 
-            // 锁定整个SurfaceView
+
             Canvas mCanvas = mSurfaceHolder.lockCanvas();
-            // 清屏
+
             mCanvas.drawColor(Color.WHITE);
-            // 画缩放后的图
+
             mCanvas.drawBitmap(mBitmap, mMatrix, null);
-            // 绘制完成，提交修改
+
             mSurfaceHolder.unlockCanvasAndPost(mCanvas);
-            // 重新锁一次
+
             mSurfaceHolder.lockCanvas(new Rect(0, 0, 0, 0));
             mSurfaceHolder.unlockCanvasAndPost(mCanvas);
 
@@ -103,13 +97,12 @@ public class TestActivity extends AppCompatActivity {
 
         @Override
         public boolean onScaleBegin(ScaleGestureDetector detector) {
-            // 一定要返回true才会进入onScale()这个函数
             return true;
         }
 
         @Override
         public void onScaleEnd(ScaleGestureDetector detector) {
-            preScale = scale;//记住本次的缩放后的图片比例
+            preScale = scale;
         }
     }
 }

@@ -19,9 +19,6 @@
         <item name="android:backgroundDimEnabled">true</item>
     </style>
 
-    <style name="PopWindowAnimStyle">
-    </style>
-
     <declare-styleable name="ColorPickerView">
         <attr name="enableAlpha" format="boolean"/>
         <attr name="enableBrightness" format="boolean"/>

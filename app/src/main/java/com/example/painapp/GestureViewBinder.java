@@ -26,12 +26,9 @@ public class GestureViewBinder {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 if (event.getPointerCount() == 1) {
-                    System.out.println("移动监听=====================");
                     return scrollGestureBinder.onTouchEvent(event);
                 }
                 else if (event.getPointerCount() == 2) {
-                    System.out.println("缩放测试----------------------");
-//                    scrollGestureListener.setScale(scaleGestureListener.getScale());
 
                     return scaleGestureBinder.onTouchEvent(event);
                 }

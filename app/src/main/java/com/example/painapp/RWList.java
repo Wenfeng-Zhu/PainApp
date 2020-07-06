@@ -15,7 +15,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-
+//Read and write files
 public class RWList {
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
@@ -41,8 +41,8 @@ public class RWList {
             ArrayList<String> arrayList = readList(context,fileName);
             arrayList.add(typename);
             String filePath = context.getFilesDir().getAbsolutePath()+File.separator+fileName;
-            File writeName = new File(filePath); // 相对路径，如果没有则要建立一个新的output.txt文件
-            writeName.createNewFile(); // 创建新文件,有同名的文件的话直接覆盖
+            File writeName = new File(filePath);
+            writeName.createNewFile();
             try (FileWriter writer = new FileWriter(writeName);
                  BufferedWriter out = new BufferedWriter(writer)
             ) {

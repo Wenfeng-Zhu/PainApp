@@ -57,9 +57,7 @@ public class ColorPickerActivity extends Dialog {
 
     public ColorPickerActivity(@NonNull Context context) {
         super(context);
-        System.out.println("测试节点————1————");
-       // super.onCreate(savedInstanceState);
-        System.out.println("测试节点————2————");
+
         setContentView(R.layout.activity_colorpick);
 
         LinearLayout colorPickerView = (LinearLayout) findViewById(R.id.colorPicker);
@@ -85,13 +83,6 @@ public class ColorPickerActivity extends Dialog {
         radius = colorWheel.getRadius();
         colorPickerView.setMinimumHeight(Math.round(2*radius));
 
-//        reset.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Container.typecolor = colorHex.getText().toString();
-//                Container.choose = true;
-//            }
-//        });
         ColorWheelSelector selector = new ColorWheelSelector(context);
         colorPickerView.addView(colorWheel);
         colorPickerView.addView(selector);

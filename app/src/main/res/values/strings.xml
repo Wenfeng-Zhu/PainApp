@@ -1,4 +1,5 @@
 <resources>
-    <string name="app_name">PainApp</string>
-    <string name="reset">reset</string>
+    <string name="app_name">Pain2D</string>
+    <string name="add_a_new_type">Add a New Type</string>
+    <string name="confirm">Confirm</string>
 </resources>

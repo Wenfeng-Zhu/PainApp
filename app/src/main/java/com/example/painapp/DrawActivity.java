@@ -5,27 +5,28 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Path;
-import android.graphics.PointF;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
-import android.util.Log;
 import android.view.GestureDetector;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
+import android.widget.FrameLayout;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.ScrollView;
 import android.widget.Toast;
 
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -36,7 +37,7 @@ public class DrawActivity extends AppCompatActivity {
     private int Eraser = 2;
     Context context = this;
     private Path lastPath;
-    private Map<String, Integer> map;
+    private Map<String, Integer> map = new HashMap<String, Integer>();
 
     private ScaleGestureDetector mScaleGestureDetector = null;
 
@@ -89,82 +90,88 @@ public class DrawActivity extends AppCompatActivity {
     private GestureDetector gestureDetector;
 
 
+    @SuppressLint("ClickableViewAccessibility")
     private void init() {
-        LinearLayout layout = (LinearLayout) findViewById(R.id.root);
-        int height = layout.getHeight();
+        FrameLayout layout = (FrameLayout) findViewById(R.id.root);
+        Animation animation = AnimationUtils.loadAnimation(context,R.anim.alpha);
 
-//      ScrollView scrollView = (ScrollView) findViewById(R.id.drawArea);
-        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT);
+        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         params.addRule(RelativeLayout.CENTER_IN_PARENT, RelativeLayout.TRUE);
         final DrawView view = new DrawView(this);
-//        view.setMinimumHeight(Math.round(1169 * proportion));
-//        view.setMinimumWidth(Math.round(827 * proportion));
+
         view.setLayoutParams(params);
-        //ArrayList<String> typeList = this.getIntent().getStringArrayListExtra("typeList");
-        map = (Map<String, Integer>) this.getIntent().getSerializableExtra("map");
-        view.setMap(map);
+
+        if (Container.ifDisplay) {
+            map = null;
+        } else if (Container.ifRedraw) {
+            map.put(Container.typeName, Container.typeColor);
+            view.setMap(map);
+        } else {
+            map = (Map<String, Integer>) this.getIntent().getSerializableExtra("map");
+            view.setMap(map);
+        }
         view.invalidate();
-        layout.addView(view,params);
+        layout.addView(view, params);
+
+        gestureViewBinder = new GestureViewBinder(this, layout, view);
 
 
+        ImageButton button_legend = (ImageButton)findViewById(R.id.button_legend);
 
+        if (map != null){
 
-        //scaleGestureBinder.bindView(this,view,layout);
-        gestureViewBinder = new GestureViewBinder(this,layout,view);
-
-        //scrollGestureListener = new ScrollGestureListener(view);
-        //gestureViewBinder = new GestureViewBinder(context,scrollGestureListener,layout,view);
-
-
-        ArrayList<Button> buttonList = new ArrayList<Button>();
-        final int num = map.size();
-        double time = Math.ceil((double) num / 3.0);
-        for (int i = 0; i < time; i++) {
-            addItem(buttonList);
-        }
-        int k = 0;
-        for (final Map.Entry<String, Integer> map1 : map.entrySet()) {
-            if (k == 0) {
-                view.setPaintColor(map1.getValue());
+            ArrayList<Button> buttonList = new ArrayList<Button>();
+            final int num = map.size();
+            double time = Math.ceil((double) num / 3.0);
+            for (int i = 0; i < time; i++) {
+                addItem(buttonList);
             }
-            buttonList.get(k).setText(map1.getKey());
-            buttonList.get(k).setBackgroundColor(map1.getValue());
-
-            int finalK = k;
-            buttonList.get(k).setOnTouchListener(new View.OnTouchListener() {
-                @Override
-                public boolean onTouch(View v, MotionEvent event) {
-
-                    if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                        buttonList.get(finalK).setBackgroundColor(Color.parseColor("#FFADC1D4"));
-                        view.setPaintColor(map1.getValue());
-                        view.setMode(Pen);
-                        view.pressed(true);
-                        view.invalidate();
-                        Container.move_action = true;
-                    }
-                    if (event.getAction() == MotionEvent.ACTION_UP) {
-                        buttonList.get(finalK).setBackgroundColor(map1.getValue());
-                    }
-                    return false;
+            int k = 0;
+            for (final Map.Entry<String, Integer> map1 : map.entrySet()) {
+                if (k == 0) {
+                    view.setPaintColor(map1.getValue());
                 }
-            });
-            k++;
+                buttonList.get(k).setText(map1.getKey());
+                buttonList.get(k).setBackgroundColor(map1.getValue());
+
+                int finalK = k;
+                buttonList.get(k).setOnTouchListener(new View.OnTouchListener() {
+                    @Override
+                    public boolean onTouch(View v, MotionEvent event) {
+
+                        if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                            buttonList.get(finalK).setBackgroundColor(Color.parseColor("#FFADC1D4"));
+                            view.setPaintColor(map1.getValue());
+                            view.setMode(Pen);
+                            view.pressed(true);
+                            view.invalidate();
+                            button_legend.setBackgroundColor(map1.getValue());
+                            Container.move_action = true;
+                        }
+                        if (event.getAction() == MotionEvent.ACTION_UP) {
+                            buttonList.get(finalK).setBackgroundColor(map1.getValue());
+                        }
+                        return false;
+                    }
+                });
+                k++;
+            }
         }
-        Button button_move = (Button)findViewById(R.id.button_move);
-        button_move.setOnTouchListener(new View.OnTouchListener() {
+        ImageButton button_move = (ImageButton) findViewById(R.id.button_move);
+        button_move.setOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onTouch(View v, MotionEvent event) {
+            public void onClick(View v) {
+                button_move.startAnimation(animation);
                 Container.move_action = false;
-                return false;
             }
         });
 
 
-        Button button_undo = (Button) findViewById(R.id.button_undo);
+        ImageButton button_undo = (ImageButton) findViewById(R.id.button_undo);
         button_undo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                button_undo.startAnimation(animation);
                 if (!view.getPathList().isEmpty()) {
 
                     LinkedHashMap<Path, Integer> pathList = view.getPathList();
@@ -203,10 +210,11 @@ public class DrawActivity extends AppCompatActivity {
             }
         });
 
-        Button button_eraser = (Button) findViewById(R.id.button_eraser);
+        ImageButton button_eraser = (ImageButton) findViewById(R.id.button_eraser);
         button_eraser.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View v) {
+                button_eraser.startAnimation(animation);
                 view.setMode(Eraser);
             }
         });
@@ -224,7 +232,7 @@ public class DrawActivity extends AppCompatActivity {
         button_save.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                button_save.startAnimation(animation);
                 if (view.saveScreen()) {
                     DialogUtils saveDialog = new DialogUtils();
 //                    saveDialog.savePasswordDialog(context, view.getSbMap(), proportion, view.getContext().getFilesDir().getAbsolutePath());
@@ -240,12 +248,16 @@ public class DrawActivity extends AppCompatActivity {
         Button button_back = (Button) findViewById(R.id.back);
         button_back.setOnClickListener(new Button.OnClickListener() {
             public void onClick(View v) {
+                button_back.startAnimation(animation);
                 Intent intent = new Intent(DrawActivity.this, MainActivity.class);
                 startActivity(intent);
                 Container.ifImport = false;
+                Container.ifDisplay = false;
+                Container.ifRedraw = false;
             }
         });
     }
+
 
 
 }

@@ -28,13 +28,21 @@ import androidx.annotation.RequiresApi;
 import java.util.Locale;
 import java.util.Map;
 
+
+//Pop-ups, including prompt pictures, save pop-ups, add type pop-ups
+
 public class DialogUtils {
-
-
 
     private Toast toast;
 
+
+
+    //set password
     private final static String correct = "zhu";
+
+
+
+
     private static String chooseColor;
     private static int color;
     private ColorPickerActivity colorPickerActivity;
@@ -42,18 +50,18 @@ public class DialogUtils {
     protected void tipsDialog(Context context, String msg){
 
         LayoutInflater inflater = LayoutInflater.from(context);
-        View v = inflater.inflate(R.layout.dialog_tips,null );// 得到加载view
-        TextView tipTextView = v.findViewById(R.id.tips_textview);// 提示文字
-        tipTextView.setText(msg);// 设置加载信息
+        View v = inflater.inflate(R.layout.dialog_tips,null );
+        TextView tipTextView = v.findViewById(R.id.tips_textview);
+        tipTextView.setText(msg);
 
-         Dialog tipsDialog = new Dialog(context, R.style.MyDialogStyle);// 创建自定义样式dialog
+         Dialog tipsDialog = new Dialog(context, R.style.MyDialogStyle);
         tipsDialog.setContentView(R.layout.dialog_tips);
-        tipsDialog.setCancelable(true); // 是否可以按“返回键”消失
-        tipsDialog.setCanceledOnTouchOutside(true); // 点击加载框以外的区域
+        tipsDialog.setCancelable(true);
+        tipsDialog.setCanceledOnTouchOutside(true);
 
         tipsDialog.setContentView(v, new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.MATCH_PARENT));// 设置布局
+                LinearLayout.LayoutParams.MATCH_PARENT));
 
         Window window = tipsDialog.getWindow();
         WindowManager.LayoutParams lp = window.getAttributes();
@@ -72,14 +80,14 @@ public class DialogUtils {
         LayoutInflater inflater = LayoutInflater.from(context);
         View v = inflater.inflate(R.layout.dialog_password_save,null );
 
-        final Dialog saveDialog = new Dialog(context, R.style.MyDialogStyle);// 创建自定义样式dialog
+        final Dialog saveDialog = new Dialog(context, R.style.MyDialogStyle);
         saveDialog.setContentView(R.layout.dialog_password_save);
-        saveDialog.setCancelable(false); // 是否可以按“返回键”消失
-        saveDialog.setCanceledOnTouchOutside(false); // 点击加载框以外的区域
+        saveDialog.setCancelable(false);
+        saveDialog.setCanceledOnTouchOutside(false);
 
         saveDialog.setContentView(v, new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.MATCH_PARENT));// 设置布局
+                LinearLayout.LayoutParams.MATCH_PARENT));
 
         Window window = saveDialog.getWindow();
         WindowManager.LayoutParams lp = window.getAttributes();
@@ -120,7 +128,6 @@ public class DialogUtils {
                 if (string.equals(correct) &&  !patientID.getText().toString().isEmpty()){
 
                     SaveJson saveJson = new SaveJson();
-                    System.out.println("测试节点——————2————————");
 
                     saveJson.exportJson(map,proportion,filePath,patientID.getText().toString());
                     saveDialog.dismiss();
@@ -150,14 +157,14 @@ public class DialogUtils {
         LayoutInflater inflater = LayoutInflater.from(context);
         final View v = inflater.inflate(R.layout.dialog_password_add,null );
 
-        final Dialog addDialog = new Dialog(context, R.style.MyDialogStyle);// 创建自定义样式dialog
+        final Dialog addDialog = new Dialog(context, R.style.MyDialogStyle);
         addDialog.setContentView(R.layout.dialog_password_add);
-        addDialog.setCancelable(false); // 是否可以按“返回键”消失
-        addDialog.setCanceledOnTouchOutside(false); // 点击加载框以外的区域
+        addDialog.setCancelable(false);
+        addDialog.setCanceledOnTouchOutside(false);
 
         addDialog.setContentView(v, new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.MATCH_PARENT));// 设置布局
+                LinearLayout.LayoutParams.MATCH_PARENT));
 
         Window window = addDialog.getWindow();
         WindowManager.LayoutParams lp = window.getAttributes();

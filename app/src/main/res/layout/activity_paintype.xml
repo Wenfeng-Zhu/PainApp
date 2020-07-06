@@ -9,79 +9,107 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:weightSum="20"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
-        <LinearLayout
-            android:id="@+id/AllListLayout"
+        <ScrollView
+            android:id="@+id/scrollView2"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="1dp"
-            android:layout_marginLeft="1dp"
-            android:layout_marginTop="1dp"
-            android:layout_marginEnd="1dp"
-            android:layout_marginRight="1dp"
-            android:layout_marginBottom="1dp"
-            android:orientation="vertical">
+            android:layout_height="0dp"
+            android:layout_weight="18">
 
             <LinearLayout
-                android:id="@+id/SpinnerList_1"
+                android:id="@+id/AllListLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:layout_marginStart="1dp"
+                android:layout_marginLeft="1dp"
+                android:layout_marginTop="1dp"
+                android:layout_marginEnd="1dp"
+                android:layout_marginRight="1dp"
+                android:layout_marginBottom="1dp"
+                android:orientation="vertical">
 
-                <Spinner
-                    android:id="@+id/spinner_1"
-                    android:layout_width="170dp"
-                    android:layout_height="60dp"
-                    android:layout_weight="2" />
+                <LinearLayout
+                    android:id="@+id/SpinnerList_1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:weightSum="6">
 
-                <Button
-                    android:id="@+id/button_1"
-                    android:layout_width="70dp"
-                    android:layout_height="60dp"
-                    android:layout_weight="1" />
+                    <Spinner
+                        android:id="@+id/spinner_1"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="4" />
+
+                    <Button
+                        android:id="@+id/button_1"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="2" />
+
+                </LinearLayout>
+
 
             </LinearLayout>
+        </ScrollView>
 
-            <LinearLayout
-                android:id="@+id/SpinnerList_2"
-                android:layout_width="match_parent"
+        <LinearLayout
+            android:id="@+id/linearLayout"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginBottom="20dp"
+            android:layout_weight="2"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/button"
+                android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:orientation="horizontal">
+                android:layout_weight="4"
+                android:background="#00FFFFFF"
+                android:textColor="#FFFFFF" />
 
-                <Spinner
-                    android:id="@+id/spinner_2"
-                    android:layout_width="170dp"
-                    android:layout_height="60dp"
-                    android:layout_weight="2" />
+            <ImageButton
+                android:id="@+id/button_newType"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="4"
+                android:background="#00FFFFFF"
+                android:scaleType="fitStart"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:srcCompat="@mipmap/add_new_type_round" />
 
-                <Button
-                    android:id="@+id/button_2"
-                    android:layout_width="70dp"
-                    android:layout_height="60dp"
-                    android:layout_weight="1" />
-            </LinearLayout>
+            <ImageButton
+                android:id="@+id/button_add"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="3"
+                android:background="@drawable/press"
+                android:padding="0dp"
+                android:scaleType="fitCenter" />
 
+            <ImageButton
+                android:id="@+id/button_next"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="4"
+                android:background="#00FFFFFF"
+                android:scaleType="fitEnd"
+                app:srcCompat="@mipmap/go_next" />
+
+            <Button
+                android:id="@+id/button2"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="4"
+                android:background="#00FFFFFF" />
         </LinearLayout>
-
-        <ImageButton
-            android:id="@+id/button_add"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:srcCompat="@android:drawable/ic_input_add" />
-
-        <Button
-            android:id="@+id/button_newType"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Add a New Type" />
-
-        <Button
-            android:id="@+id/button_next"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Confirm" />
-
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

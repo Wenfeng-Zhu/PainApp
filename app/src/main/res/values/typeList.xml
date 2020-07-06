@@ -1,40 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string-array name="typeList">
-        <item>druck</item>
-        <item>kolik</item>
-        <item>brennend</item>
-        <item>dumpf</item>
-        <item>bohrend</item>
-        <item>stechend</item>
-        <item>anfallsartiger</item>
-        <item>einschießender</item>
-        <item>pochend</item>
-        <item>klopfend</item>
-        <item>ziehend</item>
-        <item>heiß</item>
-        <item>akut</item>
-        <item>Ameisenlaufen</item>
-        <item>Stromkribbeln</item>
-        <item>blitzartig-elektrisierend</item>
-        <item>Taubheistgefühl</item>
-        <item>krampfartig</item>
-
-<!--        <item>0xFF207582</item>-->
-<!--        -->
-<!--        <item>0xFF8DC881</item>-->
-<!--        -->
-<!--        <item>0xFF4DBAA1</item>-->
-<!--        -->
-<!--        <item>0xFFA59E38</item>-->
-<!--        -->
-<!--        <item>0xFF597455</item>-->
-
-
-
-
-    </string-array>
-
 
 
 </resources>

@@ -21,7 +21,6 @@ public class ScaleGestureListener implements ScaleGestureDetector.OnScaleGesture
 
     @Override
     public boolean onScale(ScaleGestureDetector detector) {
-        System.out.println("————————————手势监听ON————————————");
         scale = detector.getScaleFactor();
         scale = scaleTemp * scale;
         targetView.setScaleX(scale);
@@ -31,13 +30,11 @@ public class ScaleGestureListener implements ScaleGestureDetector.OnScaleGesture
 
     @Override
     public boolean onScaleBegin(ScaleGestureDetector detector) {
-        System.out.println("————————————手势监听BEGIN————————————");
         return true;
     }
 
     @Override
     public void onScaleEnd(ScaleGestureDetector detector) {
-        System.out.println("————————————手势监听END————————————");
         scaleTemp = scale;
     }
 
